@@ -208,8 +208,14 @@
             <artifactId>arquillian-junit5-container</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        
+        
 
     </dependencies>
+    
+    
+    
 
     <build>
         <!-- Tell Maven that the resulting file should not have a file name containing the version -
