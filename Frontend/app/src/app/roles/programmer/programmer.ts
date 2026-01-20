@@ -1,33 +1,90 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProjectsService } from '../../services/projects'; // Asegúrate que la ruta sea correcta
+import { AuthService } from '../../auth/auth.service';
 import { Proyecto } from '../../models/entidades';
 
-
 @Component({
-  selector: 'app-programmer', standalone: true, imports: [FormsModule, CommonModule],
-  templateUrl: './programmer.html', styleUrls: ['./programmer.scss']
+  selector: 'app-programmer',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './programmer.html',
+  styleUrls: ['./programmer.scss']
 })
 export class ProgrammerComponent implements OnInit {
-  http = inject(HttpClient);
-  api = 'http://localhost:8080/proyectoFinal/api/proyectos';
+
+  private projectService = inject(ProjectsService);
+  private authService = inject(AuthService);
+
+
   projects: Proyecto[] = [];
-  newProject: Proyecto = { nombre:'', descripcion:'', seccion:'Academico', urlRepo:'', tecnologias:'' };
+  currentUser: any = null;
 
-  ngOnInit() { this.load(); }
+  newProject: Proyecto = {
+    nombre: '',
+    descripcion: '',
+    seccion: 'Academico', 
+    urlRepo: '',
+    tecnologias: ''
+  };
 
-  load() { this.http.get<Proyecto[]>(this.api).subscribe(data => this.projects = data); }
+  ngOnInit() {
 
-  save() {
-    this.http.post(this.api, this.newProject).subscribe(() => {
-      alert('Guardado en MySQL');
-      this.load();
-      this.newProject = { nombre:'', descripcion:'', seccion:'Academico', urlRepo:'', tecnologias:'' };
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+
+    this.loadProjects();
+  }
+
+
+  loadProjects() {
+    this.projectService.getAll().subscribe({
+      next: (data) => {
+        this.projects = data;
+      },
+      error: (e) => console.error('Error al cargar proyectos:', e)
     });
   }
 
+
+  save() {
+
+    if (!this.newProject.nombre || !this.newProject.urlRepo) {
+      alert('⚠️ El nombre y la URL del repositorio son obligatorios.');
+      return;
+    }
+
+    this.projectService.create(this.newProject).subscribe({
+      next: () => {
+        alert('✅ Proyecto guardado exitosamente');
+        this.loadProjects(); 
+        this.resetForm();    
+      },
+      error: () => alert('❌ Error al guardar el proyecto')
+    });
+  }
+
+
   delete(id: number) {
-    if(confirm('¿Borrar?')) this.http.delete(`${this.api}/${id}`).subscribe(() => this.load());
+    if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
+      this.projectService.delete(id).subscribe({
+        next: () => {
+          this.loadProjects(); 
+        },
+        error: () => alert('❌ Error al eliminar')
+      });
+    }
+  }
+
+  resetForm() {
+    this.newProject = {
+      nombre: '',
+      descripcion: '',
+      seccion: 'Academico',
+      urlRepo: '',
+      tecnologias: ''
+    };
   }
 }

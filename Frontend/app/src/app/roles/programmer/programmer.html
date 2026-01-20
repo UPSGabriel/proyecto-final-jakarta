@@ -1,87 +1,78 @@
-<div class="programmer-layout">
-  <aside class="sidebar">
-    <ng-container *ngIf="data$ | async as data">
-      <div class="profile">
-        <h3>{{ data.user.displayName }}</h3>
-        <p class="role-badge">Programador</p>
-      </div>
-      <nav>
-        <button [class.active]="currentView === 'projects'" 
-                (click)="setView('projects')">
-          📁 Mis Proyectos
-        </button>
-        
-        <button [class.active]="currentView === 'appointments'" 
-                (click)="setView('appointments')">
-          📅 Asesorías 
-          <span class="count" *ngIf="data.appointments.length">{{ data.appointments.length }}</span>
-        </button>
-        
-        <button (click)="auth.logout()" class="logout">Cerrar Sesión</button>
-      </nav>
-    </ng-container>
-  </aside>
+<div class="programmer-dashboard">
+  <header>
+    <h1>👨‍💻 Panel de Gestión de Portafolio</h1>
+    <p *ngIf="currentUser">Bienvenido, <strong>{{ currentUser.nombre || currentUser.email }}</strong></p>
+  </header>
 
-  <main class="content">
-    <ng-container *ngIf="data$ | async as data; else loading">
+  <div class="dashboard-grid">
+    
+    <div class="card form-card">
+      <h2>✨ Nuevo Proyecto</h2>
+      <form (ngSubmit)="save()">
+        
+        <div class="form-group">
+          <label>Nombre del Proyecto *</label>
+          <input [(ngModel)]="newProject.nombre" name="nombre" required placeholder="Ej: Sistema de Facturación">
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="newProject.descripcion" name="descripcion" rows="3" placeholder="Breve resumen..."></textarea>
+        </div>
+
+        <div class="row">
+          <div class="form-group half">
+            <label>Sección</label>
+            <select [(ngModel)]="newProject.seccion" name="seccion">
+              <option value="Academico">Académico</option>
+              <option value="Laboral">Laboral</option>
+              <option value="Personal">Personal</option>
+            </select>
+          </div>
+          
+          <div class="form-group half">
+            <label>Tecnologías</label>
+            <input [(ngModel)]="newProject.tecnologias" name="tecnologias" placeholder="Java, Angular, SQL...">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>URL Repositorio (GitHub) *</label>
+          <input [(ngModel)]="newProject.urlRepo" name="urlRepo" required placeholder="https://github.com/usuario/repo">
+        </div>
+
+        <button type="submit" class="btn-save">💾 Publicar Proyecto</button>
+      </form>
+    </div>
+
+    <div class="card list-card">
+      <h2>📚 Mis Proyectos ({{ projects.length }})</h2>
       
-      <div *ngIf="currentView === 'projects'" class="fade-in">
-        <header><h2>Gestión de Portafolio</h2></header>
-        
-        <div class="add-project-card">
-          <h3>Nuevo Proyecto</h3>
-          <div class="form-grid">
-            <input type="text" [(ngModel)]="newProject.title" placeholder="Título">
-            <input type="text" [(ngModel)]="newProject.tech" placeholder="Tecnologías">
-            <input type="text" [(ngModel)]="newProject.link" placeholder="Link Repo/Demo">
-            <textarea [(ngModel)]="newProject.description" placeholder="Descripción"></textarea>
-            <button (click)="addProject(data.user.uid)">+ Guardar</button> 
-          </div>
-        </div>
+      <div *ngIf="projects.length === 0" class="empty-state">
+        <p>📭 No tienes proyectos registrados aún.</p>
+        <small>Usa el formulario de la izquierda para agregar uno.</small>
+      </div>
 
-        <div class="projects-list">
-          <div class="project-item" *ngFor="let proj of data.projects">
-            <div>
-              <h4>{{ proj.title }}</h4>
-              <p>{{ proj.description }}</p>
-              <small class="tech">{{ proj.tech }}</small>
-            </div>
-            <button (click)="deleteProject(data.user.uid, proj.id!)" class="delete-btn">×</button>
+      <div class="projects-container">
+        <div class="project-item" *ngFor="let p of projects">
+          <div class="project-header">
+            <h3>{{ p.nombre }}</h3>
+            <span [class]="'badge ' + p.seccion.toLowerCase()">{{ p.seccion }}</span>
+          </div>
+          
+          <p class="desc">{{ p.descripcion }}</p>
+          
+          <div class="tech-stack">
+            <small>🛠 {{ p.tecnologias }}</small>
+          </div>
+
+          <div class="project-actions">
+            <a [href]="p.urlRepo" target="_blank" class="btn-link">🔗 GitHub</a>
+            <button class="btn-delete" (click)="delete(p.id!)">🗑 Eliminar</button>
           </div>
         </div>
       </div>
+    </div>
 
-      <div *ngIf="currentView === 'appointments'" class="fade-in">
-        <header>
-          <h2>Solicitudes de Asesoría</h2>
-          <button class="test-btn" (click)="createDemo(data.user.uid)">+ Crear Solicitud de Prueba</button>
-        </header>
-
-        <div class="appointments-grid">
-          <div class="card-apt" *ngFor="let apt of data.appointments" [class]="apt.status">
-            <div class="apt-header">
-              <span class="status-badge">{{ apt.status | uppercase }}</span>
-              <span class="date">{{ apt.date.seconds * 1000 | date:'short' }}</span>
-            </div>
-            
-            <h4>{{ apt.userName }}</h4>
-            <p class="contact">{{ apt.userContact }}</p>
-            <p class="topic">"{{ apt.topic }}"</p>
-
-            <div class="actions" *ngIf="apt.status === 'pending'">
-              <button class="approve" (click)="respondAppointment(apt.id!, 'approved')">Aprobar</button>
-              <button class="reject" (click)="respondAppointment(apt.id!, 'rejected')">Rechazar</button>
-            </div>
-            <div class="actions" *ngIf="apt.status !== 'pending'">
-              <p>Solicitud gestionada.</p>
-            </div>
-          </div>
-
-          <p *ngIf="data.appointments.length === 0">No tienes solicitudes pendientes.</p>
-        </div>
-      </div>
-
-    </ng-container>
-    <ng-template #loading><p class="loading">Cargando panel...</p></ng-template>
-  </main>
+  </div>
 </div>

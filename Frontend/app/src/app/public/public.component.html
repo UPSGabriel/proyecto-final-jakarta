@@ -1,89 +1,38 @@
 <div class="public-container">
   <header class="hero">
-    <nav class="top-nav">
-      <div class="logo">P67 Servicios</div>
-      
-      <button class="logout-btn" (click)="logout()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-          <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-        </svg>
-        Cerrar Sesión
+    <h1>🚀 Portafolio de Programadores P67</h1>
+    <p>Encuentra al experto que necesitas para tu próximo proyecto.</p>
+    
+    <div class="hero-actions">
+      <button class="btn-pdf" (click)="descargar()">
+        📄 Descargar Reporte PDF
       </button>
-    </nav>
-
-    <div class="hero-content">
-      <h1>Encuentra a tu <span class="highlight">Mentor Ideal</span></h1>
-      <p>Conecta con programadores expertos en tiempo real.</p>
-      <button class="cta-btn" (click)="scrollTo('programmers')">Ver Expertos</button>
+      
+      <button class="btn-cita" (click)="testCita()">
+        📅 Agendar Cita de Prueba
+      </button>
     </div>
   </header>
 
-  <section id="programmers" class="programmers-section">
-    <h2>Programadores Disponibles</h2>
-    
-    <div class="grid">
-      <div class="card" *ngFor="let dev of programmers$ | async">
-        <div class="card-header">
-          <img [src]="dev.photoURL || 'https://ui-avatars.com/api/?name='+dev.displayName" class="avatar">
-          <div class="badges">
-            <span class="badge">{{ dev.role | uppercase }}</span>
-          </div>
-        </div>
-        <div class="card-body">
-          <h3>{{ dev.displayName }}</h3>
-          <p>{{ dev.email }}</p>
-          <p class="desc">Programador listo para ayudarte en tus proyectos.</p>
-        </div>
-        <div class="card-footer">
-          <button class="btn-primary" (click)="openSchedule(dev)">Agendar Asesoría</button>
-        </div>
+  <section class="info-section">
+    <h2>¿Cómo funciona?</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <h3>1. Explora</h3>
+        <p>Revisa el portafolio de nuestros mejores desarrolladores.</p>
+      </div>
+      <div class="card">
+        <h3>2. Agenda</h3>
+        <p>Solicita una asesoría técnica en el horario que prefieras.</p>
+      </div>
+      <div class="card">
+        <h3>3. Soluciona</h3>
+        <p>Recibe soporte vía WhatsApp o Correo automáticamente.</p>
       </div>
     </div>
-
-    <p *ngIf="(programmers$ | async)?.length === 0" style="text-align:center">
-      No hay programadores registrados aún.
-    </p>
   </section>
 
   <footer>
-    <p>© 2025 Proyecto Integrador P67</p>
+    <p>© 2025 Proyecto Final Jakarta EE & Angular - UPS</p>
   </footer>
-
-  <div class="modal-overlay" *ngIf="selectedProgrammer">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Agendar con {{ selectedProgrammer.displayName }}</h3>
-        <button class="close-btn" (click)="closeModal()">×</button>
-      </div>
-      
-      <div class="modal-body">
-        <label>Tu Nombre:</label>
-        <input type="text" [(ngModel)]="appointmentForm.userName" placeholder="Ej: Juan Pérez">
-
-        <label>Tu Contacto (Email/WhatsApp):</label>
-        <input type="text" [(ngModel)]="appointmentForm.userContact" placeholder="Ej: juan@mail.com">
-
-        <label>Motivo de la asesoría:</label>
-        <textarea [(ngModel)]="appointmentForm.topic" placeholder="Ej: Necesito ayuda con Angular services..."></textarea>
-
-        <div class="date-row">
-          <div>
-            <label>Fecha:</label>
-            <input type="date" [(ngModel)]="appointmentForm.date">
-          </div>
-          <div>
-            <label>Hora:</label>
-            <input type="time" [(ngModel)]="appointmentForm.time">
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="cancel" (click)="closeModal()">Cancelar</button>
-        <button class="confirm" (click)="submitAppointment()">Enviar Solicitud</button>
-      </div>
-    </div>
-  </div>
-
 </div>

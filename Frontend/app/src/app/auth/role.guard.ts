@@ -1,31 +1,35 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from './auth.service';
-import { map, take } from 'rxjs';
 
-export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
-  return () => {
-    const auth = inject(AuthService);
-    const router = inject(Router);
-
-    return auth.user$.pipe(
-      take(1), 
-      map(user => {
-
-        if (!user) {
-          return router.createUrlTree(['/login']);
-        }
+export const roleGuard: CanActivateFn = (route, state) => {
+  const router = inject(Router);
 
 
-        if (allowedRoles.includes(user.role)) {
-          return true;
-        }
+  const token = localStorage.getItem('jwt_token');
+  const userString = localStorage.getItem('user');
 
-        if (user.role === 'programmer') return router.createUrlTree(['/programmer']);
-        if (user.role === 'admin') return router.createUrlTree(['/admin']);
-        
-        return router.createUrlTree(['/public']);
-      })
-    );
-  };
+  if (!token || !userString) {
+    
+    router.navigate(['/login']);
+    return false;
+  }
+
+  const user = JSON.parse(userString);
+
+  const expectedRole = route.data['role'];
+
+
+  if (user.role === expectedRole || user.rol === expectedRole) {
+    return true; // ¡Pase usted!
+  } else {
+  
+    alert('⛔ Acceso Denegado: No tienes permisos para ver esta sección.');
+    
+
+    if (user.role === 'ADMIN') router.navigate(['/admin']);
+    else if (user.role === 'PROGRAMADOR') router.navigate(['/programmer']);
+    else router.navigate(['/public']);
+    
+    return false;
+  }
 };

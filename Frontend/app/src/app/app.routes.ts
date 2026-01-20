@@ -1,32 +1,28 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login.component';
-import { roleGuard } from './auth/role.guard';
+import { AdminComponent } from './roles/admin/admin';
+import { ProgrammerComponent } from './roles/programmer/programmer';
+import { PublicComponent } from './public/public.component';
+import { roleGuard } from './auth/role.guard'; 
 
 export const routes: Routes = [
-
+  { path: '', redirectTo: '/public', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  
+  { path: 'public', component: PublicComponent },
 
-  {
-    path: 'public',
-    loadComponent: () => import('./public/public.component').then(m => m.PublicComponent)
+  { 
+    path: 'admin', 
+    component: AdminComponent,
+    canActivate: [roleGuard],      
+    data: { role: 'ADMIN' }        
   },
 
-
-  {
-    path: 'admin',
-    loadComponent: () => import('./roles/admin/admin').then(m => m.AdminComponent),
-    canActivate: [roleGuard(['admin'])] 
+  { 
+    path: 'programmer', 
+    component: ProgrammerComponent,
+    canActivate: [roleGuard],      
+    data: { role: 'PROGRAMADOR' }  
   },
 
-
-  {
-    path: 'programmer',
-    loadComponent: () => import('./roles/programmer/programmer').then(m => m.ProgrammerComponent),
-    canActivate: [roleGuard(['programmer', 'admin'])]
-  },
-
-  
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: '/public' }
 ];

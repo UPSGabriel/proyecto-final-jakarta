@@ -1,38 +1,34 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData, doc, deleteDoc, query, orderBy } from '@angular/fire/firestore';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Project {
-  id?: string;
-  title: string;
-  description: string;
-  tech: string;
-  link: string;
-  createdAt: any;
-}
-
+import { Proyecto } from '../models/entidades'; 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-  private db = inject(Firestore);
+  private http = inject(HttpClient);
+  
 
-  addProject(uid: string, project: Project) {
-    
-    const projectsRef = collection(this.db, `users/${uid}/projects`);
-    return addDoc(projectsRef, project);
-  }
+  private readonly API_URL = 'http://localhost:8080/proyectoFinal/api/proyectos';
 
-  getProjects(uid: string): Observable<Project[]> {
-    const projectsRef = collection(this.db, `users/${uid}/projects`);
 
-    const q = query(projectsRef, orderBy('createdAt', 'desc')); 
-    return collectionData(q, { idField: 'id' }) as Observable<Project[]>;
+  getAll(): Observable<Proyecto[]> {
+    return this.http.get<Proyecto[]>(this.API_URL);
   }
 
 
-  deleteProject(uid: string, projectId: string) {
-    const projectDocRef = doc(this.db, `users/${uid}/projects/${projectId}`);
-    return deleteDoc(projectDocRef);
+  create(project: Proyecto): Observable<any> {
+    return this.http.post(this.API_URL, project);
+  }
+
+
+  update(project: Proyecto): Observable<any> {
+  
+    return this.http.put(this.API_URL, project);
+  }
+
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.API_URL}/${id}`);
   }
 }

@@ -1,25 +1,30 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, query, where, collectionData, addDoc } from '@angular/fire/firestore';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AppUser } from '../auth/auth.service';
+import { map } from 'rxjs/operators';
+import { Usuario, Asesoria } from '../models/entidades';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PublicService {
-  private db = inject(Firestore);
+  private http = inject(HttpClient);
+  
+
+  private readonly API_URL = 'http://localhost:8080/proyectoFinal/api';
 
 
-  getProgrammers(): Observable<AppUser[]> {
-    const usersRef = collection(this.db, 'users');
-
-    const q = query(usersRef, where('role', '==', 'programmer'));
-    return collectionData(q, { idField: 'uid' }) as Observable<AppUser[]>;
+  getProgramadores(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.API_URL}/usuarios`).pipe(
+      map(usuarios => usuarios.filter(u => u.rol === 'PROGRAMADOR'))
+    );
   }
 
 
-  requestAppointment(appointmentData: any) {
-    const appointmentsRef = collection(this.db, 'appointments');
-    return addDoc(appointmentsRef, appointmentData);
+  agendarCita(cita: Partial<Asesoria>): Observable<any> {
+    return this.http.post(`${this.API_URL}/asesorias`, cita);
+  }
+  getReportePdfUrl(): string {
+    return `${this.API_URL}/reportes/pdf`;
   }
 }

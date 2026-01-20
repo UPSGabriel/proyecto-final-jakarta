@@ -1,39 +1,60 @@
-<div class="admin-container">
-  <header>
-    <h1>Panel de Administrador</h1>
-    <button (click)="auth.logout()">Cerrar Sesión</button>
-  </header>
+<div class="container">
+  <h1>Panel de Administración</h1>
+  <button class="btn-primary" (click)="openCreateModal()">+ Nuevo Usuario</button>
 
-  <div class="users-list">
-    <h3>Gestión de Usuarios</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Usuario</th>
-          <th>Email</th>
-          <th>Rol Actual</th>
-          <th>Cambiar Rol</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let u of users$ | async">
-          <td>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <img [src]="u.photoURL" width="30" style="border-radius:50%">
-              {{ u.displayName }}
-            </div>
-          </td>
-          <td>{{ u.email }}</td>
-          <td><strong>{{ u.role }}</strong></td>
-          <td>
-            <select [value]="u.role" (change)="updateRole(u.uid, $event)">
-              <option value="user">User (Público)</option>
-              <option value="programmer">Programmer</option>
-              <option value="admin">Admin</option>
-            </select>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of users">
+        <td>{{ u.id }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          <span [class]="'badge ' + u.rol">{{ u.rol }}</span>
+        </td>
+        <td>
+          <button (click)="openEditModal(u)">✏️</button>
+          <button (click)="deleteUser(u)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="modal-backdrop" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <h2>{{ isNewUser ? 'Crear Usuario' : 'Editar Usuario' }}</h2>
+      
+      <form (ngSubmit)="saveUser()">
+        <label>Nombre:</label>
+        <input [(ngModel)]="selectedUser.nombre" name="nombre" required>
+
+        <label>Email:</label>
+        <input [(ngModel)]="selectedUser.email" name="email" required type="email">
+
+        <label>Contraseña:</label>
+        <input [(ngModel)]="selectedUser.password" name="password" type="password" 
+               [placeholder]="isNewUser ? 'Requerida' : 'Dejar vacío para no cambiar'">
+
+        <label>Rol:</label>
+        <select [(ngModel)]="selectedUser.rol" name="rol">
+          <option value="ADMIN">Administrador</option>
+          <option value="PROGRAMADOR">Programador</option>
+          <option value="CLIENTE">Cliente</option>
+        </select>
+
+        <div class="actions">
+          <button type="button" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-save">Guardar</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
