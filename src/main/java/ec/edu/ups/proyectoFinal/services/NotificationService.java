@@ -6,7 +6,7 @@ import java.util.Properties;
 
 @Singleton @Startup
 public class NotificationService {
-    // CAMBIA ESTO CON TU GMAIL Y CLAVE DE APLICACION
+  
     private final String username = "tucorreo@gmail.com"; 
     private final String password = "clave_de_aplicacion"; 
 

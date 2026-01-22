@@ -19,7 +19,6 @@ public class ReporteRest {
             document.open();
             document.add(new Paragraph("Reporte de Asesorías - P67"));
             document.add(new Paragraph("--------------------------------"));
-            // Aquí iterarías tus datos de la BD
             document.add(new Paragraph("1. Cita Pendiente - Juan Perez"));
             document.close();
             
