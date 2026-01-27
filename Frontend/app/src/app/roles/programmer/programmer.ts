@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProjectsService } from '../../services/projects'; // Asegúrate que la ruta sea correcta
+import { ProjectsService } from '../../services/projects'; 
 import { AuthService } from '../../auth/auth.service';
 import { Proyecto } from '../../models/entidades';
 

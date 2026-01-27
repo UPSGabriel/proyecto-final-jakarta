@@ -20,7 +20,7 @@ export const roleGuard: CanActivateFn = (route, state) => {
 
 
   if (user.role === expectedRole || user.rol === expectedRole) {
-    return true; // ¡Pase usted!
+    return true; 
   } else {
   
     alert('⛔ Acceso Denegado: No tienes permisos para ver esta sección.');
