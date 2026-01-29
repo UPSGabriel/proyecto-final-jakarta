@@ -1,55 +1,73 @@
 <div class="container">
   <h1>Panel de Administración</h1>
-  <button class="btn-primary" (click)="openCreateModal()">+ Nuevo Usuario</button>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Rol</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let u of users">
-        <td>{{ u.id }}</td>
-        <td>{{ u.nombre }}</td>
-        <td>{{ u.email }}</td>
-        <td>
-          <span [class]="'badge ' + u.rol">{{ u.rol }}</span>
-        </td>
-        <td>
-          <button (click)="openEditModal(u)">✏️</button>
-          <button (click)="deleteUser(u)">🗑️</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="stats-panel" *ngIf="statsData">
+    <div class="card-stat spring-card">
+      <h3>⚡ Backend Secundario</h3>
+      <p>Tecnología: <strong>{{ statsData.servidorActivo }}</strong></p>
+      <p>Estado: <span class="badge success">{{ statsData.estadoSistema }}</span></p>
+    </div>
+    <div class="card-stat">
+      <h3>📊 Métricas</h3>
+      <p>Visitas Totales: <strong>{{ statsData.totalVisitas }}</strong></p>
+    </div>
+    <div class="card-stat">
+      <h3>📢 Mensaje del Sistema</h3>
+      <p><em>"{{ statsData.mensajeDelDia }}"</em></p>
+    </div>
+  </div>
+
+  <div *ngIf="!statsData" class="alert-warning">
+    ⚠️ Cargando datos de Spring Boot (Puerto 8081)... asegúrate de encenderlo.
+  </div>
+
+  <hr>
+
+  <div class="jakarta-section">
+    <h2>👥 Gestión de Usuarios (Jakarta EE)</h2>
+    <button class="btn-primary" (click)="openCreateModal()">+ Nuevo Usuario</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users">
+          <td>{{ u.id }}</td>
+          <td>{{ u.nombre }}</td>
+          <td>{{ u.email }}</td>
+          <td><span [class]="'badge ' + u.rol">{{ u.rol }}</span></td>
+          <td>
+            <button (click)="openEditModal(u)">✏️</button>
+            <button (click)="deleteUser(u)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="modal-backdrop" *ngIf="isModalOpen">
     <div class="modal-content">
       <h2>{{ isNewUser ? 'Crear Usuario' : 'Editar Usuario' }}</h2>
-      
       <form (ngSubmit)="saveUser()">
         <label>Nombre:</label>
         <input [(ngModel)]="selectedUser.nombre" name="nombre" required>
-
         <label>Email:</label>
         <input [(ngModel)]="selectedUser.email" name="email" required type="email">
-
         <label>Contraseña:</label>
-        <input [(ngModel)]="selectedUser.password" name="password" type="password" 
-               [placeholder]="isNewUser ? 'Requerida' : 'Dejar vacío para no cambiar'">
-
+        <input [(ngModel)]="selectedUser.password" name="password" type="password">
         <label>Rol:</label>
         <select [(ngModel)]="selectedUser.rol" name="rol">
           <option value="ADMIN">Administrador</option>
           <option value="PROGRAMADOR">Programador</option>
           <option value="CLIENTE">Cliente</option>
         </select>
-
         <div class="actions">
           <button type="button" (click)="closeModal()">Cancelar</button>
           <button type="submit" class="btn-save">Guardar</button>
