@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Usuario } from '../../models/entidades'; 
+import { SpringBootService } from '../../services/springboot.service'; 
 
 @Component({
   selector: 'app-admin',
@@ -12,24 +13,51 @@ import { Usuario } from '../../models/entidades';
   styleUrls: ['./admin.scss']
 })
 export class AdminComponent implements OnInit {
+
   private http = inject(HttpClient);
+  private springService = inject(SpringBootService);
 
-  private apiUrl = 'http://localhost:8080/proyectoFinal/api/usuarios';
+ 
+  private readonly JAKARTA_API = 'http://localhost:8080/proyectoFinal/api/usuarios';
 
-  users: Usuario[] = [];
+  users: Usuario[] = [];       
+  statsData: any = null;        
+  
   selectedUser: Usuario = this.getEmptyUser();
   isModalOpen = false;
   isNewUser = true;
 
+
   ngOnInit() {
-    this.loadUsers();
+    this.loadUsersFromJakarta();
+    this.loadStatsFromSpringBoot();
   }
 
 
-  loadUsers() {
-    this.http.get<Usuario[]>(this.apiUrl).subscribe({
-      next: (data) => this.users = data,
-      error: (e) => console.error('Error cargando usuarios:', e)
+  loadStatsFromSpringBoot() {
+    this.springService.getEstadisticas().subscribe({
+      next: (data) => {
+        console.log('✅ Datos de Spring Boot recibidos:', data);
+        this.statsData = data;
+      },
+      error: (e) => {
+        console.warn('⚠️ No se pudo conectar con Spring Boot (Puerto 8081). ¿Está encendido?');
+        console.error(e);
+    
+        this.statsData = null; 
+      }
+    });
+  }
+
+
+  
+
+  loadUsersFromJakarta() {
+    this.http.get<Usuario[]>(this.JAKARTA_API).subscribe({
+      next: (data) => {
+        this.users = data;
+      },
+      error: (e) => console.error('❌ Error cargando usuarios de Jakarta:', e)
     });
   }
 
@@ -37,27 +65,27 @@ export class AdminComponent implements OnInit {
   saveUser() {
 
     if (!this.selectedUser.nombre || !this.selectedUser.email || !this.selectedUser.rol) {
-      alert('Por favor completa nombre, email y rol.');
+      alert('Por favor completa los campos obligatorios.');
       return;
     }
 
     if (this.isNewUser) {
-      
-      this.http.post(this.apiUrl, this.selectedUser).subscribe({
+
+      this.http.post(this.JAKARTA_API, this.selectedUser).subscribe({
         next: () => {
-          alert('Usuario creado correctamente ✅');
+          alert('Usuario creado correctamente en Jakarta ✅');
           this.closeModal();
-          this.loadUsers();
+          this.loadUsersFromJakarta();
         },
         error: () => alert('Error al crear usuario.')
       });
     } else {
- 
-      this.http.put(this.apiUrl, this.selectedUser).subscribe({
+  
+      this.http.put(this.JAKARTA_API, this.selectedUser).subscribe({
         next: () => {
-          alert('Usuario actualizado ✅');
+          alert('Usuario actualizado en Jakarta ✅');
           this.closeModal();
-          this.loadUsers();
+          this.loadUsersFromJakarta();
         },
         error: () => alert('Error al actualizar usuario.')
       });
@@ -68,9 +96,9 @@ export class AdminComponent implements OnInit {
     if (!user.id) return;
     
     if (confirm(`¿Estás seguro de eliminar a ${user.nombre}?`)) {
-      this.http.delete(`${this.apiUrl}/${user.id}`).subscribe({
+      this.http.delete(`${this.JAKARTA_API}/${user.id}`).subscribe({
         next: () => {
-          this.loadUsers();
+          this.loadUsersFromJakarta();
         },
         error: () => alert('Error al eliminar usuario.')
       });
@@ -86,7 +114,7 @@ export class AdminComponent implements OnInit {
 
   openEditModal(user: Usuario) {
     this.isNewUser = false;
-   
+
     this.selectedUser = { ...user }; 
     this.isModalOpen = true;
   }
@@ -100,7 +128,7 @@ export class AdminComponent implements OnInit {
       nombre: '',
       email: '',
       password: '',
-      rol: 'CLIENTE' 
+      rol: 'CLIENTE'
     };
   }
 }
