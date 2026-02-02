@@ -23,6 +23,32 @@
 
   <hr>
 
+  <div class="python-section" style="margin: 20px 0; padding: 20px; background-color: #f1f8e9; border-radius: 10px; border-left: 6px solid #43a047;">
+    <h2 style="color: #2e7d32; margin-bottom: 15px;">🐍 Microservicio Python (Reportes y Notificaciones)</h2>
+    
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      
+      <div style="flex: 1; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h4>📄 Reportes</h4>
+        <p>Generar archivo Excel con todos los usuarios.</p>
+        <button (click)="descargarReporte()" style="background-color: #1D6F42; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+          📥 Descargar Excel
+        </button>
+      </div>
+
+      <div style="flex: 1; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h4>📧 Comunicaciones</h4>
+        <p>Probar el servicio de envío de correos SMTP.</p>
+        <button (click)="enviarNotificacion()" style="background-color: #d32f2f; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+          🚀 Enviar Notificación
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <hr>
+
   <div class="jakarta-section">
     <h2>👥 Gestión de Usuarios (Jakarta EE)</h2>
     <button class="btn-primary" (click)="openCreateModal()">+ Nuevo Usuario</button>
@@ -58,16 +84,20 @@
       <form (ngSubmit)="saveUser()">
         <label>Nombre:</label>
         <input [(ngModel)]="selectedUser.nombre" name="nombre" required>
+        
         <label>Email:</label>
         <input [(ngModel)]="selectedUser.email" name="email" required type="email">
+        
         <label>Contraseña:</label>
         <input [(ngModel)]="selectedUser.password" name="password" type="password">
+        
         <label>Rol:</label>
         <select [(ngModel)]="selectedUser.rol" name="rol">
           <option value="ADMIN">Administrador</option>
           <option value="PROGRAMADOR">Programador</option>
           <option value="CLIENTE">Cliente</option>
         </select>
+        
         <div class="actions">
           <button type="button" (click)="closeModal()">Cancelar</button>
           <button type="submit" class="btn-save">Guardar</button>
@@ -75,4 +105,5 @@
       </form>
     </div>
   </div>
+
 </div>
