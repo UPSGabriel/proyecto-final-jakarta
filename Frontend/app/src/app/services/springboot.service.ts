@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class SpringBootService {
   private http = inject(HttpClient);
   
-  // OJO: Este apunta al puerto 8081 (Spring Boot)
+
   private readonly SPRING_API = 'http://localhost:8081/api/stats';
 
   getEstadisticas(): Observable<any> {

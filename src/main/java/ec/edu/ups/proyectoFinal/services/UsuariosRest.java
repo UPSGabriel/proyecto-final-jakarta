@@ -13,6 +13,14 @@ public class UsuariosRest {
 
     @Inject
     private UsuarioDAO dao;
+    
+    @Inject
+    private NotificationService notificaciones;
+
+    public void registrarUsuario(Usuario u) {
+        
+        notificaciones.enviarWhatsapp("+593987654321", "¡Hola " + u.getNombre() + "! Bienvenido a Dúo Trend 🚀");
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

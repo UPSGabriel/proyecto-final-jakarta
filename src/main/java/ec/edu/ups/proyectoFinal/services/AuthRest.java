@@ -10,6 +10,14 @@ import java.util.Date;
 
 @Path("auth")
 public class AuthRest {
+	
+	@Inject
+	private NotificationService notificaciones;
+
+	public void registrarUsuario(Usuario u) {
+	
+	    notificaciones.enviarWhatsapp("+593987654321", "¡Hola " + u.getNombre() + "! Bienvenido a Dúo Trend 🚀");
+	}
     @Inject private UsuarioDAO dao;
     @POST @Path("login") @Consumes(MediaType.APPLICATION_JSON) @Produces(MediaType.APPLICATION_JSON)
     public Response login(Usuario u) {

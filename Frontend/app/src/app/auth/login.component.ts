@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // <--- Importante para el link
+import { RouterModule } from '@angular/router'; 
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class LoginComponent {
   };
 
   onLogin() {
-    // Usamos tu función login que ya maneja la redirección internamente
+
     this.authService.login(this.credentials);
   }
 }

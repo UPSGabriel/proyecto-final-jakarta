@@ -1,5 +1,4 @@
-package ec.edu.ups.proyectoFinal.services; // ⚠️ Asegúrate que el paquete sea correcto
-
+package ec.edu.ups.proyectoFinal.services; 
 import java.io.IOException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
