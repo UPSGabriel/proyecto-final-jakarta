@@ -13,7 +13,7 @@ public class PerfilProgramador implements Serializable {
     private String especialidad; private String descripcion; private String github; private String whatsapp;
     @OneToOne @JoinColumn(name="usuario_id") private Usuario usuario;
     @OneToMany(mappedBy="programador", cascade=CascadeType.ALL) private List<Disponibilidad> horarios;
-    // Getters y Setters...
+   
     public int getId() { return id; } public void setId(int id) { this.id = id; }
     public String getEspecialidad() { return especialidad; } public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
     public String getDescripcion() { return descripcion; } public void setDescripcion(String descripcion) { this.descripcion = descripcion; }

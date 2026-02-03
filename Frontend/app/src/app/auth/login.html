@@ -1,34 +1,25 @@
-<div class="login-container">
-  <div class="card">
-    <h2>Iniciar Sesión (P67)</h2>
-    
-    <div *ngIf="errorMessage" class="error-msg">
-      {{ errorMessage }}
-    </div>
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>🔐 Iniciar Sesión</h2>
+    <p class="subtitle">Bienvenido de nuevo</p>
 
     <form (ngSubmit)="onLogin()">
+      
       <div class="form-group">
-        <label>Email:</label>
-        <input 
-          type="email" 
-          [(ngModel)]="credentials.email" 
-          name="email" 
-          required 
-          placeholder="admin@ups.edu.ec">
+        <label>Correo Electrónico</label>
+        <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="tu@correo.com" required>
       </div>
 
       <div class="form-group">
-        <label>Contraseña:</label>
-        <input 
-          type="password" 
-          [(ngModel)]="credentials.password" 
-          name="password" 
-          required>
+        <label>Contraseña</label>
+        <input type="password" [(ngModel)]="credentials.password" name="password" placeholder="******" required>
       </div>
 
-      <button type="submit" [disabled]="isLoading">
-        {{ isLoading ? 'Conectando...' : 'Ingresar' }}
-      </button>
+      <button type="submit" class="btn-auth">Ingresar</button>
     </form>
+
+    <div class="auth-footer">
+      <p>¿No tienes cuenta? <a routerLink="/register">Regístrate gratis</a></p>
+    </div>
   </div>
 </div>

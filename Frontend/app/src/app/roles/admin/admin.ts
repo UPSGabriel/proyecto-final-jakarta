@@ -17,10 +17,11 @@ export class AdminComponent implements OnInit {
 
   private http = inject(HttpClient);
   private springService = inject(SpringBootService);
-
   private pythonService = inject(PythonService);
 
   private readonly JAKARTA_API = 'http://localhost:8080/proyectoFinal/api/usuarios';
+
+  private readonly PYTHON_API = 'http://localhost:8000/notificaciones/enviar';
 
   users: Usuario[] = [];       
   statsData: any = null;        
@@ -29,11 +30,20 @@ export class AdminComponent implements OnInit {
   isModalOpen = false;
   isNewUser = true;
 
+
+  showEmailModal = false;
+  isEnviando = false; 
+  emailData = {
+    destinatario: '',
+    asunto: '',
+    mensaje: ''
+  };
+ 
+
   ngOnInit() {
     this.loadUsersFromJakarta();
     this.loadStatsFromSpringBoot();
   }
-
 
   loadStatsFromSpringBoot() {
     this.springService.getEstadisticas().subscribe({
@@ -48,7 +58,6 @@ export class AdminComponent implements OnInit {
       }
     });
   }
-
 
   loadUsersFromJakarta() {
     this.http.get<Usuario[]>(this.JAKARTA_API).subscribe({
@@ -99,11 +108,9 @@ export class AdminComponent implements OnInit {
     }
   }
 
-
   descargarReporte() {
     this.pythonService.descargarExcel().subscribe({
       next: (data: Blob) => {
-
         const url = window.URL.createObjectURL(data);
         const a = document.createElement('a');
         a.href = url;
@@ -122,27 +129,43 @@ export class AdminComponent implements OnInit {
     });
   }
 
- 
-  enviarNotificacion() {
-    
-    const emailDestino = prompt("Ingresa el correo destinatario para la prueba:", "ejemplo@correo.com");
-    
-    if (emailDestino) {
-      const asunto = "Notificación desde Angular + Python";
-      const mensaje = "Hola, esta es una prueba de integración del Proyecto Integrador. El sistema de notificaciones Python funciona correctamente.";
 
-      this.pythonService.enviarCorreo(emailDestino, asunto, mensaje).subscribe({
-        next: (resp) => {
-          alert('✅ Correo enviado con éxito por Python.');
-        },
-        error: (err) => {
-          console.error(err);
-          alert('❌ Error al enviar el correo. Revisa la consola de Python.');
-        }
-      });
-    }
+
+  abrirModalCorreo() {
+
+    this.emailData = { destinatario: '', asunto: '', mensaje: '' };
+    this.showEmailModal = true;
   }
 
+  cerrarModalCorreo() {
+    this.showEmailModal = false;
+  }
+
+  enviarCorreoPython() {
+
+    this.isEnviando = true;
+
+
+    const payload = {
+      email: [this.emailData.destinatario], 
+      asunto: this.emailData.asunto,
+      mensaje: this.emailData.mensaje
+    };
+
+  
+    this.http.post(this.PYTHON_API, payload).subscribe({
+      next: (res) => {
+        alert('✅ ¡Correo enviado con éxito!');
+        this.isEnviando = false; 
+        this.cerrarModalCorreo(); 
+      },
+      error: (err) => {
+        console.error(err);
+        alert('❌ Error al enviar. Revisa que Python (Puerto 8000) esté encendido.');
+        this.isEnviando = false; 
+      }
+    });
+  }
 
   openCreateModal() {
     this.isNewUser = true;

@@ -1,38 +1,74 @@
 <div class="public-container">
-  <header class="hero">
+  
+  <header class="hero-section">
     <h1>🚀 Portafolio de Programadores P67</h1>
     <p>Encuentra al experto que necesitas para tu próximo proyecto.</p>
     
-    <div class="hero-actions">
-      <button class="btn-pdf" (click)="descargar()">
+    <div class="hero-buttons">
+      <button (click)="descargar()" class="btn-pdf">
         📄 Descargar Reporte PDF
       </button>
-      
-      <button class="btn-cita" (click)="testCita()">
+      <button (click)="testCita()" class="btn-cita">
         📅 Agendar Cita de Prueba
       </button>
     </div>
   </header>
 
-  <section class="info-section">
-    <h2>¿Cómo funciona?</h2>
-    <div class="cards-grid">
-      <div class="card">
-        <h3>1. Explora</h3>
-        <p>Revisa el portafolio de nuestros mejores desarrolladores.</p>
+  <div class="content-wrapper">
+    
+    <section class="programmers-section">
+      <h2 class="section-title">Nuestros Expertos Disponibles</h2>
+
+      <div *ngIf="programadores.length === 0" class="loading-state">
+        <p>⏳ Cargando talentos o no hay programadores disponibles...</p>
       </div>
-      <div class="card">
-        <h3>2. Agenda</h3>
-        <p>Solicita una asesoría técnica en el horario que prefieras.</p>
+
+      <div class="grid-programadores">
+        <div *ngFor="let p of programadores" class="card-dev">
+          <div class="card-header">
+            <div class="avatar">{{ p.nombre.charAt(0) }}</div>
+            <div>
+              <h3>{{ p.nombre }}</h3>
+              <span class="badge">{{ p.rol }}</span>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <p><strong>📧 Email:</strong> {{ p.email }}</p>
+            <p class="desc">Experto en desarrollo Backend y Frontend con Jakarta EE.</p>
+          </div>
+
+          <div class="card-footer">
+            <button class="btn-contactar">Contactar</button>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <h3>3. Soluciona</h3>
-        <p>Recibe soporte vía WhatsApp o Correo automáticamente.</p>
+    </section>
+
+    <hr class="divider">
+
+    <section class="info-section">
+      <h2 class="section-title">¿Cómo funciona?</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <h3>1. Explora</h3>
+          <p>Revisa el portafolio de nuestros mejores desarrolladores.</p>
+        </div>
+        <div class="step-card">
+          <h3>2. Agenda</h3>
+          <p>Solicita una asesoría técnica en el horario que prefieras.</p>
+        </div>
+        <div class="step-card">
+          <h3>3. Soluciona</h3>
+          <p>Recibe soporte vía WhatsApp o Correo automáticamente.</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+  </div>
 
   <footer>
     <p>© 2025 Proyecto Final Jakarta EE & Angular - UPS</p>
   </footer>
+
 </div>

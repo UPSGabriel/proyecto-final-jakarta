@@ -4,12 +4,17 @@ import { AdminComponent } from './roles/admin/admin';
 import { ProgrammerComponent } from './roles/programmer/programmer';
 import { PublicComponent } from './public/public.component';
 import { roleGuard } from './auth/role.guard'; 
+import { RegisterComponent } from './pages/register/register';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/public', pathMatch: 'full' },
+  
+  { path: '', redirectTo: '/registro', pathMatch: 'full' },
+
   { path: 'login', component: LoginComponent },
   { path: 'public', component: PublicComponent },
+  { path: 'registro', component: RegisterComponent },
 
+ 
   { 
     path: 'admin', 
     component: AdminComponent,
@@ -24,5 +29,5 @@ export const routes: Routes = [
     data: { role: 'PROGRAMADOR' }  
   },
 
-  { path: '**', redirectTo: '/public' }
+  
 ];

@@ -12,7 +12,7 @@ public class NotificationService {
 
     @Schedule(hour="*", minute="0", persistent=false)
     public void tareaProgramada() {
-        System.out.println("⏰ [SCHEDULER] Verificando citas próximas...");
+        System.out.println("[SCHEDULER] Verificando citas próximas...");
     }
 
     public void enviarCorreo(String to, String subject, String body) {

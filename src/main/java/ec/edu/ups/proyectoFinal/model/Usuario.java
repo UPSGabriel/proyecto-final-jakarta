@@ -13,8 +13,8 @@ public class Usuario implements Serializable {
     private String nombre;
     @Column(unique=true) private String email;
     private String password;
-    private String rol; // ADMIN, PROGRAMADOR, CLIENTE
-    // Getters y Setters...
+    private String rol; 
+
     public int getId() { return id; } public void setId(int id) { this.id = id; }
     public String getNombre() { return nombre; } public void setNombre(String nombre) { this.nombre = nombre; }
     public String getEmail() { return email; } public void setEmail(String email) { this.email = email; }
