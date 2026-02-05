@@ -1,9 +1,9 @@
 <div class="public-container">
-  
+
   <header class="hero-section">
     <h1>🚀 Portafolio de Programadores P67</h1>
     <p>Encuentra al experto que necesitas para tu próximo proyecto.</p>
-    
+
     <div class="hero-buttons">
       <button (click)="descargar()" class="btn-pdf">
         📄 Descargar Reporte PDF
@@ -15,7 +15,7 @@
   </header>
 
   <div class="content-wrapper">
-    
+
     <section class="programmers-section">
       <h2 class="section-title">Nuestros Expertos Disponibles</h2>
 
@@ -32,14 +32,36 @@
               <span class="badge">{{ p.rol }}</span>
             </div>
           </div>
-          
+
           <div class="card-body">
             <p><strong>📧 Email:</strong> {{ p.email }}</p>
-            <p class="desc">Experto en desarrollo Backend y Frontend con Jakarta EE.</p>
+
+            <p class="desc">
+              {{ p.perfil?.descripcion || 'Experto en desarrollo Backend y Frontend con Jakarta EE.' }}
+            </p>
+
+            <p *ngIf="p.perfil?.especialidad" style="font-size: 0.85rem; color: #666; margin-top: 5px;">
+              🌟 {{ p.perfil?.especialidad }}
+            </p>
           </div>
 
           <div class="card-footer">
-            <button class="btn-contactar">Contactar</button>
+
+            <a *ngIf="p.perfil?.whatsapp"
+               [href]="'https://wa.me/' + p.perfil!.whatsapp + '?text=Hola ' + p.nombre + ', vi tu perfil en DuoTrend y me interesa contactarte.'"
+               target="_blank"
+               class="btn-contactar"
+               style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              Contactar 💬
+            </a>
+
+            <button *ngIf="!p.perfil?.whatsapp"
+                    class="btn-contactar"
+                    disabled
+                    style="background-color: #ccc; cursor: not-allowed;">
+              Sin Contacto
+            </button>
+
           </div>
         </div>
       </div>
