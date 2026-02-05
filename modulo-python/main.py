@@ -6,25 +6,18 @@ from database import engine
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from pydantic import EmailStr, BaseModel
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
-from fastapi.middleware.cors import CORSMiddleware 
 
 
 app = FastAPI()
 
-
-origins = [
-    "http://localhost:4200", 
-    "http://127.0.0.1:4200",
-    "*" 
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,    
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
-    allow_methods=["*"],      
-    allow_headers=["*"],       
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -33,10 +26,38 @@ app.add_middleware(
 def read_root():
     return {"mensaje": "Backend en Python conectado con Éxito 🚀"}
 
+
+
 @app.get("/reportes/descargar-excel")
 def descargar_excel():
 
-    pass 
+    query = "SELECT * FROM tbl_usuarios"
+
+    try:
+
+        df = pd.read_sql(query, engine)
+
+
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Lista_Usuarios')
+
+        output.seek(0)
+
+
+        headers = {
+            "Content-Disposition": "attachment; filename=reporte_usuarios_sistema.xlsx"
+        }
+
+
+        return StreamingResponse(
+            output,
+            headers=headers,
+            media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+    except Exception as e:
+        return {"error": f"Hubo un problema generando el Excel: {str(e)}"}
+
 
 
 conf = ConnectionConfig(
@@ -45,27 +66,27 @@ conf = ConnectionConfig(
     MAIL_FROM="alexgabo9080@gmail.com",
     MAIL_PORT=465,
     MAIL_SERVER="smtp.gmail.com",
-    
-    
-    MAIL_STARTTLS=False, 
+    MAIL_STARTTLS=False,
     MAIL_SSL_TLS=True,
-    
+
     USE_CREDENTIALS=True,
-    VALIDATE_CERTS=False  
+    VALIDATE_CERTS=True
+
+
+
 )
 
+
+
 class EmailSchema(BaseModel):
-    email: List[EmailStr]  
+    email: List[EmailStr]
     asunto: str
     mensaje: str
 
+
+
 @app.post("/notificaciones/enviar")
 async def enviar_correo(email_data: EmailSchema):
-    print("🔔 INTENTO DE ENVÍO DETECTADO")
-    print(f"📨 Destinatario: {email_data.email}")
-    print(f"📝 Asunto: {email_data.asunto}")
-
-
     html = f"""
     <h3>Notificación del Sistema de Asesorías</h3>
     <p>{email_data.mensaje}</p>
@@ -77,6 +98,7 @@ async def enviar_correo(email_data: EmailSchema):
         subject=email_data.asunto,
         recipients=email_data.email,
         body=html,
+
         subtype=MessageType.html
     )
 

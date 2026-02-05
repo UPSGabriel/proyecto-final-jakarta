@@ -1,14 +1,11 @@
-
 from pydantic import BaseModel
 from typing import Optional
-
 
 
 class PersonaBase(BaseModel):
     cedula: str
     nombre: str
     direccion: str
-
 
 
 class PersonaCreate(PersonaBase):
@@ -22,7 +19,6 @@ class PersonaUpdate(BaseModel):
 
 
 class Persona(PersonaBase):
-    
 
     class Config:
         from_attributes = True
