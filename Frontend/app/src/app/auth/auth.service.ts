@@ -6,12 +6,12 @@ import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  
+
   http = inject(HttpClient);
   router = inject(Router);
-  platformId = inject(PLATFORM_ID); 
-  
-  
+  platformId = inject(PLATFORM_ID);
+
+
   private readonly BASE_URL = 'http://localhost:8080/proyectoFinal/api';
 
   currentUser$ = new BehaviorSubject<any>(null);
@@ -27,41 +27,54 @@ export class AuthService {
 
 
   login(creds: any) {
-    
-    const urlLogin = `${this.BASE_URL}/auth/login`; 
+    const urlLogin = `${this.BASE_URL}/auth/login`;
 
     this.http.post<any>(urlLogin, creds).subscribe({
       next: (resp) => {
-       
-        const user = { 
-            email: creds.email, 
-            role: resp.rol || resp.role 
+        console.log('🔥 RESPUESTA REAL RECIBIDA:', resp);
+
+
+        const user = {
+          id: resp.id,
+          nombre: resp.nombre,
+          email: creds.email,
+          rol: resp.rol
         };
-        
+
+        console.log('✅ Usuario listo para sesión:', user);
+
         if (isPlatformBrowser(this.platformId)) {
+
           localStorage.setItem('jwt_token', resp.token);
           localStorage.setItem('user', JSON.stringify(user));
         }
 
+
         this.currentUser$.next(user);
-        
-      
-        if(user.role === 'ADMIN') this.router.navigate(['/admin']);
-        else if(user.role === 'PROGRAMADOR') this.router.navigate(['/programmer']);
-        else this.router.navigate(['/public']);
+
+
+        console.log('🚀 Intentando navegar a la ruta del rol:', user.rol);
+
+        if (user.rol === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else if (user.rol === 'PROGRAMADOR') {
+          this.router.navigate(['/programmer']);
+        } else {
+          this.router.navigate(['/public']);
+        }
       },
       error: (err) => {
-        console.error(err);
-        alert('❌ Error: Credenciales incorrectas o ruta no encontrada.');
+        console.error('❌ Error en login:', err);
+        alert('Credenciales incorrectas o servidor fuera de línea.');
       }
     });
   }
 
 
   register(usuario: any) {
-   
-    const urlRegistro = `${this.BASE_URL}/usuarios`; 
-    
+
+    const urlRegistro = `${this.BASE_URL}/usuarios`;
+
     const nuevoUsuario = { ...usuario, rol: 'CLIENTE' };
 
     return this.http.post(urlRegistro, nuevoUsuario);

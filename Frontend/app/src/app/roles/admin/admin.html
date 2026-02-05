@@ -1,5 +1,13 @@
 <div class="container">
-  <h1>Panel de Administración</h1>
+
+  <div class="header-toolbar">
+    <h1>Panel de Administración</h1>
+
+    <button class="btn-logout" (click)="logout()">
+      🚪 Cerrar Sesión
+    </button>
+  </div>
+  <hr style="margin-top: 5px; margin-bottom: 25px;">
 
   <div class="stats-panel" *ngIf="statsData">
     <div class="card-stat spring-card">
@@ -27,13 +35,11 @@
     <h2 style="color: #2e7d32; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
       🐍 Microservicio Python (Reportes y Notificaciones)
     </h2>
-    
+
     <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-      
       <div style="flex: 1; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); min-width: 250px;">
         <h4 style="margin-top: 0; color: #333;">📄 Reportes</h4>
         <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Generar archivo Excel con todos los usuarios.</p>
-        
         <button (click)="descargarReporte()" style="background-color: #1D6F42; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px;">
           📥 Descargar Excel
         </button>
@@ -42,12 +48,10 @@
       <div style="flex: 1; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); min-width: 250px;">
         <h4 style="margin-top: 0; color: #333;">📧 Comunicaciones</h4>
         <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Probar el servicio de envío de correos SMTP.</p>
-        
         <button (click)="abrirModalCorreo()" style="background-color: #d32f2f; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px;">
           📧 Redactar Notificación
         </button>
       </div>
-
     </div>
   </div>
 
@@ -61,92 +65,120 @@
 
     <table>
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Email</th>
-          <th>Rol</th>
-          <th>Acciones</th>
-        </tr>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let u of users">
-          <td>{{ u.id }}</td>
-          <td>{{ u.nombre }}</td>
-          <td>{{ u.email }}</td>
-          <td><span [class]="'badge ' + u.rol">{{ u.rol }}</span></td>
-          <td>
-            <button (click)="openEditModal(u)" style="margin-right: 5px;">✏️</button>
-            <button (click)="deleteUser(u)">🗑️</button>
-          </td>
-        </tr>
+      <tr *ngFor="let u of users">
+        <td>{{ u.id }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.email }}</td>
+        <td><span [class]="'badge ' + u.rol">{{ u.rol }}</span></td>
+        <td>
+          <button (click)="openEditModal(u)" style="margin-right: 5px;">✏️</button>
+          <button (click)="deleteUser(u)">🗑️</button>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
+</div>
 
-  <div class="modal-backdrop" *ngIf="isModalOpen">
-    <div class="modal-content">
-      <h2>{{ isNewUser ? 'Crear Usuario' : 'Editar Usuario' }}</h2>
-      <form (ngSubmit)="saveUser()">
-        <label>Nombre:</label>
-        <input [(ngModel)]="selectedUser.nombre" name="nombre" required>
-        
-        <label>Email:</label>
-        <input [(ngModel)]="selectedUser.email" name="email" required type="email">
-        
-        <label>Contraseña:</label>
-        <input [(ngModel)]="selectedUser.password" name="password" type="password">
-        
-        <label>Rol:</label>
-        <select [(ngModel)]="selectedUser.rol" name="rol">
-          <option value="ADMIN">Administrador</option>
-          <option value="PROGRAMADOR">Programador</option>
-          <option value="CLIENTE">Cliente</option>
-        </select>
-        
-        <div class="actions">
-          <button type="button" (click)="closeModal()">Cancelar</button>
-          <button type="submit" class="btn-save">Guardar</button>
+<div class="modal-backdrop" *ngIf="showEmailModal">
+  <div class="modal-content email-modal">
+    <h3 style="color: #2e7d32; border-bottom: 2px solid #43a047; padding-bottom: 10px;">
+      📧 Nueva Notificación (Python)
+    </h3>
+    <div class="form-group" style="margin-top: 15px;">
+      <label>Destinatario:</label>
+      <input type="email" [(ngModel)]="emailData.destinatario" placeholder="ejemplo@correo.com" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Asunto:</label>
+      <input type="text" [(ngModel)]="emailData.asunto" placeholder="Título del mensaje..." class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Mensaje:</label>
+      <textarea [(ngModel)]="emailData.mensaje" rows="4" placeholder="Escribe aquí el detalle..." class="form-control"></textarea>
+    </div>
+    <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+      <button (click)="cerrarModalCorreo()" class="btn-cancel" [disabled]="isEnviando">Cancelar</button>
+      <button (click)="enviarCorreoPython()" class="btn-send" [disabled]="!emailData.destinatario || !emailData.asunto || isEnviando">
+        <span *ngIf="!isEnviando">🚀 Enviar Correo</span>
+        <span *ngIf="isEnviando">⏳ Enviando...</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <h2>{{ isNewUser ? 'Crear Usuario' : 'Editar Usuario' }}</h2>
+    <form (ngSubmit)="saveUser()">
+      <label>Nombre:</label>
+      <input [(ngModel)]="selectedUser.nombre" name="nombre" required class="form-control">
+
+      <label>Email:</label>
+      <input [(ngModel)]="selectedUser.email" name="email" required type="email" class="form-control">
+
+      <label>Contraseña:</label>
+      <input [(ngModel)]="selectedUser.password" name="password" type="password" class="form-control">
+
+      <label>Rol:</label>
+      <select [(ngModel)]="selectedUser.rol" name="rol" class="form-control">
+        <option value="ADMIN">Administrador</option>
+        <option value="PROGRAMADOR">Programador</option>
+        <option value="CLIENTE">Cliente</option>
+      </select>
+
+      <div *ngIf="selectedUser.rol === 'PROGRAMADOR'" class="programmer-section"
+           style="margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #2e7d32;">
+        <h4 style="color: #2e7d32; margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+          👨‍💻 Perfil Profesional
+        </h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+          <div class="form-group">
+            <label>🛠️ Especialidad:</label>
+            <input [(ngModel)]="selectedUser.perfil!.especialidad" name="especialidad" placeholder="Ej: Backend Java" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>📱 WhatsApp:</label>
+            <input [(ngModel)]="selectedUser.perfil!.whatsapp" name="whatsapp" placeholder="+593 99..." class="form-control">
+          </div>
         </div>
-      </form>
-    </div>
+        <div class="form-group">
+          <label>🐙 GitHub Link:</label>
+          <input [(ngModel)]="selectedUser.perfil!.github" name="github" placeholder="https://github.com/..." class="form-control">
+        </div>
+        <div class="form-group">
+          <label>📝 Descripción:</label>
+          <textarea [(ngModel)]="selectedUser.perfil!.descripcion" name="descripcion" rows="2" class="form-control" placeholder="Breve biografía..."></textarea>
+        </div>
+
+        <h4 style="color: #2e7d32; margin: 15px 0 5px 0; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+          🕒 Horarios Disponibles
+        </h4>
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+          <input type="text" [(ngModel)]="nuevoHorario" name="nuevoHorario" placeholder="Ej: Lunes 09:00 - 11:00" class="form-control" (keydown.enter)="$event.preventDefault(); agregarHorario()">
+          <button type="button" (click)="agregarHorario()" style="background: #2e7d32; color: white; border: none; border-radius: 4px; padding: 0 15px; font-weight: bold;">+</button>
+        </div>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li *ngFor="let hora of horariosList; let i = index" style="background: white; border: 1px solid #eee; padding: 8px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; border-radius: 4px;">
+            <span>📅 {{ hora }}</span>
+            <button type="button" (click)="eliminarHorario(i)" style="color: red; background: none; border: none; cursor: pointer;">✕</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="actions">
+        <button type="button" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn-save">Guardar</button>
+      </div>
+    </form>
   </div>
-
-  <div class="modal-backdrop" *ngIf="showEmailModal">
-    <div class="modal-content email-modal">
-      <h3 style="color: #2e7d32; border-bottom: 2px solid #43a047; padding-bottom: 10px;">
-        📧 Nueva Notificación (Python)
-      </h3>
-      
-      <div class="form-group" style="margin-top: 15px;">
-        <label>Destinatario:</label>
-        <input type="email" [(ngModel)]="emailData.destinatario" placeholder="ejemplo@correo.com" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label>Asunto:</label>
-        <input type="text" [(ngModel)]="emailData.asunto" placeholder="Título del mensaje..." class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label>Mensaje:</label>
-        <textarea [(ngModel)]="emailData.mensaje" rows="4" placeholder="Escribe aquí el detalle..." class="form-control"></textarea>
-      </div>
-
-      <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-        <button (click)="cerrarModalCorreo()" class="btn-cancel" [disabled]="isEnviando">Cancelar</button>
-        
-        <button 
-          (click)="enviarCorreoPython()" 
-          class="btn-send"
-          [disabled]="!emailData.destinatario || !emailData.asunto || isEnviando"
-          [class.sending]="isEnviando">
-          
-          <span *ngIf="!isEnviando">🚀 Enviar Correo</span>
-          <span *ngIf="isEnviando">⏳ Enviando...</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
 </div>

@@ -1,5 +1,5 @@
 
-$primary-color: #2563eb; 
+$primary-color: #2563eb;
 $bg-gradient: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
 $card-bg: #ffffff;
 $text-dark: #1f2937;
@@ -38,7 +38,7 @@ $text-light: #6b7280;
 
 .card-header {
   padding: 40px 30px 10px;
-  
+
   .logo-placeholder {
     width: 60px;
     height: 60px;
@@ -213,7 +213,7 @@ $text-light: #6b7280;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 16px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     transition: border-color 0.3s;
 
     &:focus {
@@ -241,12 +241,24 @@ $text-light: #6b7280;
 .auth-footer {
   margin-top: 20px;
   font-size: 14px;
-  
+
   a {
     color: #43a047;
     text-decoration: none;
     font-weight: bold;
-    
+
     &:hover { text-decoration: underline; }
+  }
+}
+
+.link-register {
+  color: #28a745;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #218838;
+    text-decoration: underline;
   }
 }

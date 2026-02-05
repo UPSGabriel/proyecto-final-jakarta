@@ -1,15 +1,68 @@
 <div class="programmer-dashboard">
-  <header>
-    <h1>👨‍💻 Panel de Gestión de Portafolio</h1>
-    <p *ngIf="currentUser">Bienvenido, <strong>{{ currentUser.nombre || currentUser.email }}</strong></p>
+
+  <header class="header-toolbar">
+    <div class="user-info">
+      <h1>👨‍💻 Panel de Gestión</h1>
+      <p *ngIf="currentUser">
+        Bienvenido, <strong>{{ currentUser.nombre || currentUser.email }}</strong>
+      </p>
+    </div>
+
+    <button class="btn-logout" (click)="logout()">
+      🚪 Cerrar Sesión
+    </button>
   </header>
 
+  <hr style="margin-bottom: 25px; border: 0; border-top: 1px solid #ddd;">
+
+  <section class="asesorias-container" style="margin-bottom: 40px;">
+    <h2 style="color: #0277bd; display: flex; align-items: center; gap: 10px;">
+      📬 Solicitudes de Asesoría
+    </h2>
+
+    <div class="asesorias-grid">
+
+      <div *ngFor="let ase of asesorias" class="card-asesoria" [ngClass]="ase.estado">
+
+        <div class="card-header">
+          <span class="cliente-name">👤 {{ ase.cliente?.nombre || 'Cliente' }}</span>
+          <span class="badge" [ngClass]="ase.estado">{{ ase.estado }}</span>
+        </div>
+
+        <div class="card-body">
+          <h4 class="tema-title">{{ ase.tema }}</h4>
+          <p class="fecha-hora">📅 {{ ase.fecha }} - ⏰ {{ ase.hora }}</p>
+
+        </div>
+
+        <div class="actions" *ngIf="ase.estado === 'PENDIENTE'">
+          <button class="btn-reject" (click)="abrirModal(ase, 'RECHAZADA')">
+            ✕ Rechazar
+          </button>
+          <button class="btn-accept" (click)="abrirModal(ase, 'ACEPTADA')">
+            ✓ Aceptar
+          </button>
+        </div>
+
+        <div class="respuesta-info" *ngIf="ase.estado !== 'PENDIENTE'">
+          <hr>
+          <p><strong>Tu respuesta:</strong> <br> {{ ase.respuesta }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="asesorias.length === 0" class="empty-state-asesorias" style="grid-column: 1 / -1; text-align: center; padding: 20px; background: #f1f8e9; border-radius: 8px; color: #558b2f;">
+        <p>✨ ¡Estás al día! No tienes solicitudes pendientes.</p>
+      </div>
+
+    </div>
+  </section>
+
   <div class="dashboard-grid">
-    
+
     <div class="card form-card">
       <h2>✨ Nuevo Proyecto</h2>
       <form (ngSubmit)="save()">
-        
+
         <div class="form-group">
           <label>Nombre del Proyecto *</label>
           <input [(ngModel)]="newProject.nombre" name="nombre" required placeholder="Ej: Sistema de Facturación">
@@ -29,7 +82,7 @@
               <option value="Personal">Personal</option>
             </select>
           </div>
-          
+
           <div class="form-group half">
             <label>Tecnologías</label>
             <input [(ngModel)]="newProject.tecnologias" name="tecnologias" placeholder="Java, Angular, SQL...">
@@ -47,7 +100,7 @@
 
     <div class="card list-card">
       <h2>📚 Mis Proyectos ({{ projects.length }})</h2>
-      
+
       <div *ngIf="projects.length === 0" class="empty-state">
         <p>📭 No tienes proyectos registrados aún.</p>
         <small>Usa el formulario de la izquierda para agregar uno.</small>
@@ -57,21 +110,71 @@
         <div class="project-item" *ngFor="let p of projects">
           <div class="project-header">
             <h3>{{ p.nombre }}</h3>
-            <span [class]="'badge ' + p.seccion.toLowerCase()">{{ p.seccion }}</span>
+            <span [class]="'badge ' + (p.seccion ? p.seccion.toLowerCase() : 'personal')">
+              {{ p.seccion || 'Personal' }}
+            </span>
           </div>
-          
+
           <p class="desc">{{ p.descripcion }}</p>
-          
+
           <div class="tech-stack">
             <small>🛠 {{ p.tecnologias }}</small>
           </div>
 
           <div class="project-actions">
-            <a [href]="p.urlRepo" target="_blank" class="btn-link">🔗 GitHub</a>
-            <button class="btn-delete" (click)="delete(p.id!)">🗑 Eliminar</button>
+            <a [href]="p.urlRepo" target="_blank" rel="noopener noreferrer" class="btn-link" style="text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+              🔗 GitHub
+            </a>
+
+            <button class="btn-delete" (click)="delete(p.id!)">
+              🗑 Eliminar
+            </button>
           </div>
         </div>
       </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="isModalOpen">
+  <div class="modal-content">
+
+    <h3 [style.color]="accion === 'ACEPTADA' ? '#2e7d32' : '#d32f2f'">
+      {{ accion === 'ACEPTADA' ? '✅ Aceptar Solicitud' : '❌ Rechazar Solicitud' }}
+    </h3>
+
+    <p>Estás respondiendo a: <strong>{{ selectedAsesoria?.cliente?.nombre || 'Cliente' }}</strong></p>
+    <p style="font-size: 0.9em; color: #666;">Se enviará un correo automático con el siguiente mensaje:</p>
+
+    <div class="form-group">
+      <label>Mensaje / Motivo:</label>
+      <textarea
+        [(ngModel)]="mensajeRespuesta"
+        rows="4"
+        class="form-control"
+        [placeholder]="accion === 'ACEPTADA' ? 'Ej: Hola, acepto tu solicitud. Mis horarios disponibles son...' : 'Ej: Hola, lo siento pero no tengo disponibilidad para esa fecha...'">
+      </textarea>
+    </div>
+
+    <div class="modal-actions" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
+      <button class="btn-cancel" (click)="cerrarModal()" [disabled]="isProcessing">
+        Cancelar
+      </button>
+
+      <button
+        class="btn-confirm"
+        [style.backgroundColor]="accion === 'ACEPTADA' ? '#2e7d32' : '#d32f2f'"
+        [style.color]="'white'"
+        [style.border]="'none'"
+        [style.padding]="'10px 20px'"
+        [style.borderRadius]="'5px'"
+        [style.fontWeight]="'bold'"
+        [style.cursor]="'pointer'"
+        (click)="confirmarAccion()"
+        [disabled]="isProcessing">
+        {{ isProcessing ? 'Enviando...' : 'Confirmar y Enviar' }}
+      </button>
     </div>
 
   </div>

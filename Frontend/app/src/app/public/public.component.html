@@ -1,5 +1,14 @@
 <div class="public-container">
 
+  <nav class="top-nav" *ngIf="currentUser">
+    <div class="nav-content">
+      <span class="welcome-text">👋 Hola, <strong>{{ currentUser.nombre }}</strong></span>
+      <button class="btn-logout-minimal" (click)="logout()">
+        🚪 Cerrar Sesión
+      </button>
+    </div>
+  </nav>
+
   <header class="hero-section">
     <h1>🚀 Portafolio de Programadores P67</h1>
     <p>Encuentra al experto que necesitas para tu próximo proyecto.</p>
@@ -8,19 +17,15 @@
       <button (click)="descargar()" class="btn-pdf">
         📄 Descargar Reporte PDF
       </button>
-      <button (click)="testCita()" class="btn-cita">
-        📅 Agendar Cita de Prueba
-      </button>
     </div>
   </header>
 
   <div class="content-wrapper">
-
     <section class="programmers-section">
       <h2 class="section-title">Nuestros Expertos Disponibles</h2>
 
       <div *ngIf="programadores.length === 0" class="loading-state">
-        <p>⏳ Cargando talentos o no hay programadores disponibles...</p>
+        <p>⏳ Cargando talentos...</p>
       </div>
 
       <div class="grid-programadores">
@@ -35,33 +40,28 @@
 
           <div class="card-body">
             <p><strong>📧 Email:</strong> {{ p.email }}</p>
-
             <p class="desc">
               {{ p.perfil?.descripcion || 'Experto en desarrollo Backend y Frontend con Jakarta EE.' }}
             </p>
-
             <p *ngIf="p.perfil?.especialidad" style="font-size: 0.85rem; color: #666; margin-top: 5px;">
               🌟 {{ p.perfil?.especialidad }}
             </p>
+            <div class="horarios-box" *ngIf="p.perfil?.horarios">
+              <strong>🕒 Horarios Disponibles:</strong>
+              <p>{{ p.perfil?.horarios }}</p>
+            </div>
           </div>
 
           <div class="card-footer">
-
             <a *ngIf="p.perfil?.whatsapp"
-               [href]="'https://wa.me/' + p.perfil!.whatsapp + '?text=Hola ' + p.nombre + ', vi tu perfil en DuoTrend y me interesa contactarte.'"
+               [href]="'https://wa.me/' + p.perfil!.whatsapp"
                target="_blank"
-               class="btn-contactar"
-               style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
-              Contactar 💬
+               class="btn-outline">
+              💬 WhatsApp
             </a>
-
-            <button *ngIf="!p.perfil?.whatsapp"
-                    class="btn-contactar"
-                    disabled
-                    style="background-color: #ccc; cursor: not-allowed;">
-              Sin Contacto
+            <button class="btn-agendar" (click)="abrirModalAgendar(p)">
+              📅 Agendar Asesoría
             </button>
-
           </div>
         </div>
       </div>
@@ -74,23 +74,50 @@
       <div class="steps-grid">
         <div class="step-card">
           <h3>1. Explora</h3>
-          <p>Revisa el portafolio de nuestros mejores desarrolladores.</p>
+          <p>Revisa el portafolio y los horarios de nuestros desarrolladores.</p>
         </div>
         <div class="step-card">
           <h3>2. Agenda</h3>
-          <p>Solicita una asesoría técnica en el horario que prefieras.</p>
+          <p>Solicita una asesoría técnica. El programador recibirá tu solicitud.</p>
         </div>
         <div class="step-card">
           <h3>3. Soluciona</h3>
-          <p>Recibe soporte vía WhatsApp o Correo automáticamente.</p>
+          <p>Si aceptan tu solicitud, recibirás un correo de confirmación.</p>
         </div>
       </div>
     </section>
-
   </div>
 
   <footer>
     <p>© 2025 Proyecto Final Jakarta EE & Angular - UPS</p>
   </footer>
 
+</div>
+
+<div class="modal-backdrop" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <h3 style="color: #2575fc; margin-top: 0;">📅 Nueva Solicitud de Asesoría</h3>
+    <p>Agendando con: <strong>{{ selectedProgrammer?.nombre }}</strong></p>
+    <div class="alert-info" *ngIf="selectedProgrammer?.perfil?.horarios">
+      <small>ℹ️ Recuerda sus horarios: <strong>{{ selectedProgrammer?.perfil?.horarios }}</strong></small>
+    </div>
+    <form (ngSubmit)="confirmarCita()">
+      <div class="form-group">
+        <label>Tema de la Asesoría:</label>
+        <input [(ngModel)]="newCita.tema" name="tema" required placeholder="Ej: Ayuda con Spring Boot" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Fecha:</label>
+        <input type="date" [(ngModel)]="newCita.fecha" name="fecha" required class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Hora:</label>
+        <input type="time" [(ngModel)]="newCita.hora" name="hora" required class="form-control">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button type="submit" class="btn-confirm">Enviar Solicitud</button>
+      </div>
+    </form>
+  </div>
 </div>

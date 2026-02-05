@@ -1,25 +1,45 @@
 <div class="auth-container">
   <div class="auth-card">
-    <h2>🔐 Iniciar Sesión</h2>
-    <p class="subtitle">Bienvenido de nuevo</p>
+    <div class="auth-header">
+      <h2>🔐 Iniciar Sesión</h2>
+      <p class="subtitle">Bienvenido de nuevo a <strong>Dúo Trend</strong></p>
+    </div>
 
-    <form (ngSubmit)="onLogin()">
-      
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+
       <div class="form-group">
         <label>Correo Electrónico</label>
-        <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="tu@correo.com" required>
+        <input
+          type="email"
+          [(ngModel)]="credentials.email"
+          name="email"
+          placeholder="tu@correo.com"
+          required
+          #email="ngModel"
+          [class.is-invalid]="email.invalid && email.touched">
       </div>
 
       <div class="form-group">
         <label>Contraseña</label>
-        <input type="password" [(ngModel)]="credentials.password" name="password" placeholder="******" required>
+        <input
+          type="password"
+          [(ngModel)]="credentials.password"
+          name="password"
+          placeholder="******"
+          required
+          #pass="ngModel"
+          [class.is-invalid]="pass.invalid && pass.touched">
       </div>
 
-      <button type="submit" class="btn-auth">Ingresar</button>
+      <button type="submit" class="btn-auth" [disabled]="loginForm.invalid">
+        Ingresar
+      </button>
     </form>
 
     <div class="auth-footer">
-      <p>¿No tienes cuenta? <a routerLink="/register">Regístrate gratis</a></p>
+      <p>¿No tienes cuenta?
+        <a [routerLink]="['/registro']" class="link-register">Regístrate gratis</a>
+      </p>
     </div>
   </div>
 </div>

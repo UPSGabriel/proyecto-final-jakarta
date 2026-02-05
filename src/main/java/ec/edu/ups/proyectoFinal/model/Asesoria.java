@@ -1,14 +1,10 @@
 package ec.edu.ups.proyectoFinal.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tbl_asesorias") // Asegúrate de que coincida con tu tabla en PgAdmin
+@Table(name = "tbl_asesorias")
 public class Asesoria implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -18,11 +14,21 @@ public class Asesoria implements Serializable {
     private int id;
 
     private String tema;
-    private String fecha; // Usamos String para evitar líos de formatos por ahora
+    private String fecha;
     private String hora;
-    private String estado;
+    private String estado;      
+    private String respuesta;   
 
-    // --- GETTERS Y SETTERS OBLIGATORIOS ---
+    
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Usuario cliente;
+
+    
+    @ManyToOne
+    @JoinColumn(name = "programador_id")
+    private Usuario programador;
+
     
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -38,4 +44,13 @@ public class Asesoria implements Serializable {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public String getRespuesta() { return respuesta; }
+    public void setRespuesta(String respuesta) { this.respuesta = respuesta; }
+
+    public Usuario getCliente() { return cliente; }
+    public void setCliente(Usuario cliente) { this.cliente = cliente; }
+
+    public Usuario getProgramador() { return programador; }
+    public void setProgramador(Usuario programador) { this.programador = programador; }
 }

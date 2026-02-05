@@ -15,14 +15,21 @@ public class Usuario implements Serializable {
     private String password;
     private String rol; 
     
- // ... otros atributos (email, password, etc) ...
 
-    @OneToOne(mappedBy = "usuario", fetch = FetchType.EAGER) // EAGER = "Traeme el perfil AHORA MISMO"
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Perfil perfil;
 
    
     public Perfil getPerfil() { return perfil; }
-    public void setPerfil(Perfil perfil) { this.perfil = perfil; }
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+        
+        if (perfil != null) {
+            perfil.setUsuario(this);
+        }
+    }
+
     public int getId() { return id; } public void setId(int id) { this.id = id; }
     public String getNombre() { return nombre; } public void setNombre(String nombre) { this.nombre = nombre; }
     public String getEmail() { return email; } public void setEmail(String email) { this.email = email; }

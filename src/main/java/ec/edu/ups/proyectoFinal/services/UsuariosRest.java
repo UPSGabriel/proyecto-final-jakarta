@@ -1,11 +1,16 @@
 package ec.edu.ups.proyectoFinal.services;
 
 import ec.edu.ups.proyectoFinal.dao.UsuarioDAO;
+import ec.edu.ups.proyectoFinal.model.LoginResponse;
 import ec.edu.ups.proyectoFinal.model.Usuario;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.Date;
 import java.util.List;
 
 @Path("usuarios") 
@@ -16,6 +21,7 @@ public class UsuariosRest {
     
     @Inject
     private NotificationService notificaciones;
+    
 
     public void registrarUsuario(Usuario u) {
         
@@ -40,6 +46,12 @@ public class UsuariosRest {
     public Response createUsuario(Usuario u) {
         try {
             dao.insert(u);
+            
+            
+            if (u.getRol().equalsIgnoreCase("CLIENTE")) {
+                registrarUsuario(u); 
+            }
+            
             return Response.ok("{\"message\":\"Usuario creado exitosamente\"}").build();
         } catch (Exception e) {
             return Response.status(500).entity("Error al crear: " + e.getMessage()).build();
@@ -86,5 +98,34 @@ public class UsuariosRest {
         } catch (Exception e) {
             return Response.status(500).entity("Error").build();
         }
+    }
+    
+    @POST 
+    @Path("login") 
+    @Consumes(MediaType.APPLICATION_JSON) 
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(Usuario u) {
+        Usuario user = dao.login(u.getEmail(), u.getPassword());
+        
+        if(user != null) {
+            
+            String token = Jwts.builder().setSubject(user.getEmail()).claim("rol", user.getRol())
+                .setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .signWith(Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256)).compact();
+            
+            
+            String jsonRespuesta = "{"
+                + "\"token\":\"" + token + "\","
+                + "\"rol\":\"" + user.getRol() + "\","
+                + "\"id\":" + user.getId() + ","
+                + "\"nombre\":\"" + user.getNombre() + "\""
+                + "}";
+                
+            System.out.println("✅ Login exitoso para: " + user.getNombre() + " (ID: " + user.getId() + ")");
+            
+            return Response.ok(jsonRespuesta).build();
+        }
+        
+        return Response.status(401).entity("{\"error\":\"Credenciales inválidas\"}").build();
     }
 }

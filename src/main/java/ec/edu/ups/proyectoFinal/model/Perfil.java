@@ -18,15 +18,21 @@ public class Perfil implements Serializable {
     private String especialidad;
     private String github;
     private String whatsapp;
+    
+    @Column(columnDefinition = "TEXT") 
+    private String horarios;
 
     @OneToOne
-    @JoinColumn(name = "usuario_id")
-    @JsonIgnore // <--- ESTO ES VITAL: Evita que el JSON se vuelva loco (Usuario->Perfil->Usuario...)
+    @JoinColumn(name = "usuario_id") 
+    @JsonIgnore 
     private Usuario usuario;
 
-    // --- GETTERS Y SETTERS ---
+ 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    
+    public String getHorarios() { return horarios; }
+    public void setHorarios(String horarios) { this.horarios = horarios; }
     
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
