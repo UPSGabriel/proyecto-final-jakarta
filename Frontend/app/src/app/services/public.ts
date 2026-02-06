@@ -11,7 +11,7 @@ export class PublicService {
   private http = inject(HttpClient);
   
 
-  private readonly API_URL = 'http://localhost:8080/proyectoFinal/api';
+  private readonly API_URL = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api';
 
 
   getProgramadores(): Observable<Usuario[]> {

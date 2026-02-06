@@ -58,7 +58,9 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "production",
+          "prerender": false,  
+          "ssr": false
         },
         "serve": {
           "builder": "@angular/build:dev-server",
