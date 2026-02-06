@@ -11,7 +11,7 @@ RUN mvn clean package -DskipTests
 
 # --- ETAPA 2: SERVIDOR (RUN) ---
 # Usamos la imagen oficial de WildFly 30 (la misma versión que usas local)
-FROM quay.io/wildfly/wildfly:30.0.0.Final
+FROM quay.io/wildfly/wildfly:30.0.1.Final-jdk17
 
 # 1. Descargamos el driver de PostgreSQL (El "chofer" para la base de datos)
 USER root
