@@ -15,64 +15,92 @@
 
   <hr style="margin-bottom: 25px; border: 0; border-top: 1px solid #ddd;">
 
+  <div class="card shadow-sm" style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <h3 style="color: #1e293b; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+      📊 Resumen de Rendimiento
+    </h3>
+    <div style="height: 300px; display: flex; justify-content: center;">
+      <canvas id="asesoriasChart"></canvas>
+    </div>
+  </div>
+
   <section class="asesorias-container" style="margin-bottom: 40px;">
     <h2 style="color: #0277bd; display: flex; align-items: center; gap: 10px;">
       📬 Solicitudes de Asesoría
     </h2>
 
     <div class="asesorias-grid">
-
       <div *ngFor="let ase of asesorias" class="card-asesoria" [ngClass]="ase.estado">
-
         <div class="card-header">
           <span class="cliente-name">👤 {{ ase.cliente?.nombre || 'Cliente' }}</span>
           <span class="badge" [ngClass]="ase.estado">{{ ase.estado }}</span>
         </div>
-
         <div class="card-body">
           <h4 class="tema-title">{{ ase.tema }}</h4>
           <p class="fecha-hora">📅 {{ ase.fecha }} - ⏰ {{ ase.hora }}</p>
-
         </div>
-
         <div class="actions" *ngIf="ase.estado === 'PENDIENTE'">
-          <button class="btn-reject" (click)="abrirModal(ase, 'RECHAZADA')">
-            ✕ Rechazar
-          </button>
-          <button class="btn-accept" (click)="abrirModal(ase, 'ACEPTADA')">
-            ✓ Aceptar
-          </button>
+          <button class="btn-reject" (click)="abrirModal(ase, 'RECHAZADA')">✕ Rechazar</button>
+          <button class="btn-accept" (click)="abrirModal(ase, 'ACEPTADA')">✓ Aceptar</button>
         </div>
-
         <div class="respuesta-info" *ngIf="ase.estado !== 'PENDIENTE'">
           <hr>
           <p><strong>Tu respuesta:</strong> <br> {{ ase.respuesta }}</p>
         </div>
       </div>
-
       <div *ngIf="asesorias.length === 0" class="empty-state-asesorias" style="grid-column: 1 / -1; text-align: center; padding: 20px; background: #f1f8e9; border-radius: 8px; color: #558b2f;">
         <p>✨ ¡Estás al día! No tienes solicitudes pendientes.</p>
       </div>
-
     </div>
   </section>
 
   <div class="dashboard-grid">
 
+    <div class="card form-card" style="border-left: 5px solid #009688;">
+      <h2 style="color: #00796b;">📅 Mi Disponibilidad</h2>
+      <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+        Configura tu horario para que los clientes sepan cuándo agendarte.
+      </p>
+
+      <form (ngSubmit)="actualizarPerfil()">
+
+        <div class="form-group">
+          <label>🕒 Horarios de Atención</label>
+          <input [(ngModel)]="miPerfil.horarios" name="horarios"
+                 placeholder="Ej: Lun-Vie 14:00-18:00" required>
+        </div>
+
+        <div class="form-group">
+          <label>💻 Modalidad</label>
+          <select [(ngModel)]="miPerfil.modalidad" name="modalidad">
+            <option value="Virtual">Virtual (Meet/Zoom)</option>
+            <option value="Presencial">Presencial</option>
+            <option value="Hibrido">Híbrido</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>🌟 Especialidad (Opcional)</label>
+          <input [(ngModel)]="miPerfil.especialidad" name="especialidad"
+                 placeholder="Ej: Java, Angular, BD...">
+        </div>
+
+        <button type="submit" class="btn-save" style="background-color: #009688;">
+          💾 Guardar Configuración
+        </button>
+      </form>
+    </div>
     <div class="card form-card">
       <h2>✨ Nuevo Proyecto</h2>
       <form (ngSubmit)="save()">
-
         <div class="form-group">
           <label>Nombre del Proyecto *</label>
           <input [(ngModel)]="newProject.nombre" name="nombre" required placeholder="Ej: Sistema de Facturación">
         </div>
-
         <div class="form-group">
           <label>Descripción</label>
           <textarea [(ngModel)]="newProject.descripcion" name="descripcion" rows="3" placeholder="Breve resumen..."></textarea>
         </div>
-
         <div class="row">
           <div class="form-group half">
             <label>Sección</label>
@@ -82,30 +110,25 @@
               <option value="Personal">Personal</option>
             </select>
           </div>
-
           <div class="form-group half">
             <label>Tecnologías</label>
             <input [(ngModel)]="newProject.tecnologias" name="tecnologias" placeholder="Java, Angular, SQL...">
           </div>
         </div>
-
         <div class="form-group">
           <label>URL Repositorio (GitHub) *</label>
           <input [(ngModel)]="newProject.urlRepo" name="urlRepo" required placeholder="https://github.com/usuario/repo">
         </div>
-
         <button type="submit" class="btn-save">💾 Publicar Proyecto</button>
       </form>
     </div>
 
     <div class="card list-card">
       <h2>📚 Mis Proyectos ({{ projects.length }})</h2>
-
       <div *ngIf="projects.length === 0" class="empty-state">
         <p>📭 No tienes proyectos registrados aún.</p>
-        <small>Usa el formulario de la izquierda para agregar uno.</small>
+        <small>Usa el formulario para agregar uno.</small>
       </div>
-
       <div class="projects-container">
         <div class="project-item" *ngFor="let p of projects">
           <div class="project-header">
@@ -114,21 +137,15 @@
               {{ p.seccion || 'Personal' }}
             </span>
           </div>
-
           <p class="desc">{{ p.descripcion }}</p>
-
           <div class="tech-stack">
             <small>🛠 {{ p.tecnologias }}</small>
           </div>
-
           <div class="project-actions">
             <a [href]="p.urlRepo" target="_blank" rel="noopener noreferrer" class="btn-link" style="text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
               🔗 GitHub
             </a>
-
-            <button class="btn-delete" (click)="delete(p.id!)">
-              🗑 Eliminar
-            </button>
+            <button class="btn-delete" (click)="delete(p.id!)">🗑 Eliminar</button>
           </div>
         </div>
       </div>
@@ -138,44 +155,30 @@
 </div>
 
 <div class="modal-backdrop" *ngIf="isModalOpen">
-  <div class="modal-content">
-
+  <div class="modal-content" style="position: relative;">
+    <span (click)="cerrarModal()"
+          style="position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; color: #aaa; cursor: pointer; line-height: 1;"
+          onmouseover="this.style.color='#000'"
+          onmouseout="this.style.color='#aaa'">
+      &times;
+    </span>
     <h3 [style.color]="accion === 'ACEPTADA' ? '#2e7d32' : '#d32f2f'">
       {{ accion === 'ACEPTADA' ? '✅ Aceptar Solicitud' : '❌ Rechazar Solicitud' }}
     </h3>
-
     <p>Estás respondiendo a: <strong>{{ selectedAsesoria?.cliente?.nombre || 'Cliente' }}</strong></p>
     <p style="font-size: 0.9em; color: #666;">Se enviará un correo automático con el siguiente mensaje:</p>
-
     <div class="form-group">
       <label>Mensaje / Motivo:</label>
-      <textarea
-        [(ngModel)]="mensajeRespuesta"
-        rows="4"
-        class="form-control"
-        [placeholder]="accion === 'ACEPTADA' ? 'Ej: Hola, acepto tu solicitud. Mis horarios disponibles son...' : 'Ej: Hola, lo siento pero no tengo disponibilidad para esa fecha...'">
-      </textarea>
+      <textarea [(ngModel)]="mensajeRespuesta" rows="4" class="form-control" [placeholder]="accion === 'ACEPTADA' ? 'Ej: Hola, acepto tu solicitud...' : 'Ej: Lo siento, no tengo disponibilidad...'"></textarea>
     </div>
-
     <div class="modal-actions" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
-      <button class="btn-cancel" (click)="cerrarModal()" [disabled]="isProcessing">
-        Cancelar
-      </button>
-
-      <button
-        class="btn-confirm"
-        [style.backgroundColor]="accion === 'ACEPTADA' ? '#2e7d32' : '#d32f2f'"
-        [style.color]="'white'"
-        [style.border]="'none'"
-        [style.padding]="'10px 20px'"
-        [style.borderRadius]="'5px'"
-        [style.fontWeight]="'bold'"
-        [style.cursor]="'pointer'"
-        (click)="confirmarAccion()"
-        [disabled]="isProcessing">
+      <button class="btn-cancel" (click)="cerrarModal()" [disabled]="isProcessing">Cancelar</button>
+      <button class="btn-confirm"
+              [style.backgroundColor]="accion === 'ACEPTADA' ? '#2e7d32' : '#d32f2f'"
+              [style.color]="'white'" style="border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer;"
+              (click)="confirmarAccion()" [disabled]="isProcessing">
         {{ isProcessing ? 'Enviando...' : 'Confirmar y Enviar' }}
       </button>
     </div>
-
   </div>
 </div>

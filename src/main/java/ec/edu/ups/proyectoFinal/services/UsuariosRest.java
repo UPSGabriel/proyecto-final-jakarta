@@ -2,9 +2,12 @@ package ec.edu.ups.proyectoFinal.services;
 
 import ec.edu.ups.proyectoFinal.dao.UsuarioDAO;
 import ec.edu.ups.proyectoFinal.model.Usuario;
+import ec.edu.ups.proyectoFinal.model.Perfil; // 👈 ESTE IMPORT FALTABA
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager; // 👈 Importante
+import jakarta.persistence.PersistenceContext; // 👈 Importante
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -21,6 +24,9 @@ public class UsuariosRest {
     @Inject
     private UsuarioDAO dao;
     
+    @PersistenceContext // 👈 Usamos esto por seguridad
+    private EntityManager em;
+    
     @Inject
     private NotificationService notificaciones;
     
@@ -30,7 +36,7 @@ public class UsuariosRest {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Listar todos los usuarios", description = "Devuelve la lista completa de administradores, programadores y clientes.")
+    @Operation(summary = "Listar todos los usuarios", description = "Devuelve la lista completa.")
     public Response getUsuarios() {
         try {
             List<Usuario> usuarios = dao.getAll();
@@ -43,15 +49,13 @@ public class UsuariosRest {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Crear nuevo usuario", description = "Registra un usuario y envía notificación de bienvenida si es Cliente.")
+    @Operation(summary = "Crear nuevo usuario", description = "Registra un usuario.")
     public Response createUsuario(Usuario u) {
         try {
             dao.insert(u);
-            
             if (u.getRol().equalsIgnoreCase("CLIENTE")) {
                 registrarUsuario(u); 
             }
-            
             return Response.ok("{\"message\":\"Usuario creado exitosamente\"}").build();
         } catch (Exception e) {
             return Response.status(500).entity("Error al crear: " + e.getMessage()).build();
@@ -61,7 +65,7 @@ public class UsuariosRest {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Actualizar usuario", description = "Modifica datos del perfil o credenciales.")
+    @Operation(summary = "Actualizar usuario", description = "Modifica datos básicos.")
     public Response updateUsuario(Usuario u) {
         try {
             dao.update(u);
@@ -73,7 +77,7 @@ public class UsuariosRest {
     
     @DELETE
     @Path("/{id}")
-    @Operation(summary = "Eliminar usuario", description = "Borra un usuario permanentemente por su ID.")
+    @Operation(summary = "Eliminar usuario", description = "Borra un usuario por ID.")
     public Response deleteUsuario(@PathParam("id") int id) {
         try {
             dao.delete(id);
@@ -86,7 +90,6 @@ public class UsuariosRest {
     @GET
     @Path("programadores")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Obtener Programadores (Público)", description = "Filtra solo los usuarios con rol PROGRAMADOR para mostrar en el portafolio público.")
     public Response getProgramadores() {
         try {
             List<Usuario> usuarios = dao.getAll(); 
@@ -103,7 +106,6 @@ public class UsuariosRest {
     @Path("login") 
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Iniciar Sesión", description = "Verifica credenciales y retorna un Token JWT junto con los datos del usuario.")
     public Response login(Usuario u) {
         Usuario user = dao.login(u.getEmail(), u.getPassword());
         
@@ -119,11 +121,45 @@ public class UsuariosRest {
                 + "\"nombre\":\"" + user.getNombre() + "\""
                 + "}";
                 
-            System.out.println("✅ Login exitoso para: " + user.getNombre() + " (ID: " + user.getId() + ")");
-            
             return Response.ok(jsonRespuesta).build();
         }
-        
         return Response.status(401).entity("{\"error\":\"Credenciales inválidas\"}").build();
+    }
+
+    // 👇 MÉTODO ACTUALIZADO: Usa 'em.find' para evitar errores del DAO
+    @PUT
+    @Path("/perfil/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Actualizar Perfil Programador", description = "Actualiza horarios y modalidad.")
+    public Response actualizarPerfil(@PathParam("id") int id, Usuario usuarioDatos) {
+        try {
+            System.out.println("🔄 Actualizando perfil del usuario ID: " + id);
+            
+           
+            Usuario usuarioReal = em.find(Usuario.class, id);
+            
+            if (usuarioReal == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            if (usuarioReal.getPerfil() == null) {
+                usuarioReal.setPerfil(new Perfil());
+            }
+
+            if (usuarioDatos.getPerfil() != null) {
+                usuarioReal.getPerfil().setHorarios(usuarioDatos.getPerfil().getHorarios());
+                usuarioReal.getPerfil().setModalidad(usuarioDatos.getPerfil().getModalidad());
+                usuarioReal.getPerfil().setEspecialidad(usuarioDatos.getPerfil().getEspecialidad());
+            }
+
+            
+            dao.update(usuarioReal);
+            
+            return Response.ok(usuarioReal).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(500).entity("Error actualizando perfil").build();
+        }
     }
 }

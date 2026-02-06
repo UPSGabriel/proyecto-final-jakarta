@@ -1,7 +1,11 @@
 /target/
+/bin/
 /.settings/
-.classpath
-.project
+/.project
+/.classpath
+
+# 👇 ESTO ES LO QUE TE FALTABA (Angular/Node)
+node_modules/
+dist/
+.angular/
 .vscode/
-*.class
-*.log

@@ -7,6 +7,10 @@ import { SpringBootService } from '../../services/springboot.service';
 import { PythonService } from '../../services/python.service';
 import { Router } from '@angular/router';
 
+// 👇 1. Importar Chart.js
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
+
 @Component({
   selector: 'app-admin',
   standalone: true,
@@ -24,8 +28,16 @@ export class AdminComponent implements OnInit {
   private readonly JAKARTA_API = 'http://localhost:8080/proyectoFinal/api/usuarios';
   private readonly PYTHON_API = 'http://localhost:8000/notificaciones/enviar';
 
+  // Endpoints para los gráficos
+  private readonly API_ASESORIAS = 'http://localhost:8080/proyectoFinal/api/asesorias/todas'; // Ajustar si es necesario
+  private readonly API_PROYECTOS = 'http://localhost:8080/proyectoFinal/api/proyectos';
+
   users: Usuario[] = [];
   statsData: any = null;
+
+  // 👇 Variables para Gráficos
+  public chart1: any;
+  public chart2: any;
 
   selectedUser: Usuario = this.getEmptyUser();
   isModalOpen = false;
@@ -36,21 +48,93 @@ export class AdminComponent implements OnInit {
 
   showEmailModal = false;
   isEnviando = false;
-  emailData = {
-    destinatario: '',
-    asunto: '',
-    mensaje: ''
-  };
+  emailData = { destinatario: '', asunto: '', mensaje: '' };
 
   ngOnInit() {
     this.loadUsersFromJakarta();
     this.loadStatsFromSpringBoot();
+    this.cargarDatosDashboard(); // 👇 Cargar gráficos
   }
+
+  // 👇 LÓGICA DEL DASHBOARD (GRÁFICOS)
+  cargarDatosDashboard() {
+    // 1. Obtener Asesorías para el Gráfico de Barras
+    // Nota: Usamos el endpoint que devuelve TODAS las asesorías
+    // Si no tienes uno específico "todas", usa el genérico.
+    this.http.get<any[]>('http://localhost:8080/proyectoFinal/api/asesorias').subscribe({
+      next: (asesorias) => {
+        this.generarGraficoProgramadores(asesorias);
+      },
+      error: () => console.warn('No se pudieron cargar asesorías para el gráfico.')
+    });
+
+    // 2. Obtener Proyectos para el Gráfico de Pastel
+    this.http.get<any[]>(this.API_PROYECTOS).subscribe({
+      next: (proyectos) => {
+        this.generarGraficoProyectos(proyectos);
+      },
+      error: () => console.warn('No se pudieron cargar proyectos para el gráfico.')
+    });
+  }
+
+  generarGraficoProgramadores(asesorias: any[]) {
+    // Agrupar conteo por nombre de programador
+    const conteo: any = {};
+    asesorias.forEach(a => {
+      const nombre = a.programador?.nombre || 'Desconocido';
+      conteo[nombre] = (conteo[nombre] || 0) + 1;
+    });
+
+    const labels = Object.keys(conteo);
+    const data = Object.values(conteo);
+
+    if (this.chart1) this.chart1.destroy();
+
+    this.chart1 = new Chart("chartProgramadores", {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Total de Citas',
+          data: data,
+          backgroundColor: '#1565c0',
+          borderRadius: 5
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  generarGraficoProyectos(proyectos: any[]) {
+    // Agrupar por sección (Academico, Laboral, etc.)
+    const conteo: any = {};
+    proyectos.forEach(p => {
+      const secc = p.seccion || 'Otros';
+      conteo[secc] = (conteo[secc] || 0) + 1;
+    });
+
+    const labels = Object.keys(conteo);
+    const data = Object.values(conteo);
+
+    if (this.chart2) this.chart2.destroy();
+
+    this.chart2 = new Chart("chartProyectos", {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: ['#ff9800', '#4caf50', '#9c27b0', '#f44336']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+  // 👆 FIN LÓGICA DASHBOARD
 
   loadStatsFromSpringBoot() {
     this.springService.getEstadisticas().subscribe({
       next: (data) => {
-        console.log('✅ Datos de Spring Boot recibidos:', data);
         this.statsData = data;
       },
       error: (e) => {
@@ -69,21 +153,14 @@ export class AdminComponent implements OnInit {
     });
   }
 
-
   agregarHorario() {
     const horarioLimpio = this.nuevoHorario.trim();
-
     if (!horarioLimpio) return;
-
-
     const existe = this.horariosList.includes(horarioLimpio);
-
     if (existe) {
-      alert(`⚠️ El horario "${horarioLimpio}" ya está registrado en la lista.`);
+      alert(`⚠️ El horario "${horarioLimpio}" ya está registrado.`);
       return;
     }
-
-
     this.horariosList.push(horarioLimpio);
     this.nuevoHorario = '';
   }

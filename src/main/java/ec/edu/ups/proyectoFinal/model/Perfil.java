@@ -2,7 +2,7 @@ package ec.edu.ups.proyectoFinal.model;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonIgnore; // Importante para evitar errores
+import com.fasterxml.jackson.annotation.JsonIgnore; 
 
 @Entity
 @Table(name = "tbl_perfiles")
@@ -19,6 +19,9 @@ public class Perfil implements Serializable {
     private String github;
     private String whatsapp;
     
+    // 👇 ESTE ES EL CAMPO NUEVO QUE FALTABA
+    private String modalidad; 
+
     @Column(columnDefinition = "TEXT") 
     private String horarios;
 
@@ -27,7 +30,7 @@ public class Perfil implements Serializable {
     @JsonIgnore 
     private Usuario usuario;
 
- 
+    // Getters y Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     
@@ -45,6 +48,10 @@ public class Perfil implements Serializable {
     
     public String getWhatsapp() { return whatsapp; }
     public void setWhatsapp(String whatsapp) { this.whatsapp = whatsapp; }
+
+    
+    public String getModalidad() { return modalidad; }
+    public void setModalidad(String modalidad) { this.modalidad = modalidad; }
     
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }

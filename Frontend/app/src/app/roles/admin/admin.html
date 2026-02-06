@@ -1,7 +1,7 @@
 <div class="container">
 
   <div class="header-toolbar">
-    <h1>Panel de Administración</h1>
+    <h1>👨‍💼 Panel de Administración</h1>
 
     <button class="btn-logout" (click)="logout()">
       🚪 Cerrar Sesión
@@ -9,6 +9,27 @@
   </div>
   <hr style="margin-top: 5px; margin-bottom: 25px;">
 
+  <div class="dashboard-section" style="margin-bottom: 30px;">
+    <h2 style="color: #1565c0; margin-bottom: 20px;">📊 Dashboard Ejecutivo</h2>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+
+      <div class="card-chart" style="flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h4 style="margin-top: 0; color: #555;">🏆 Rendimiento: Citas por Programador</h4>
+        <div style="height: 250px; position: relative;">
+          <canvas id="chartProgramadores"></canvas>
+        </div>
+      </div>
+
+      <div class="card-chart" style="flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h4 style="margin-top: 0; color: #555;">📂 Proyectos por Categoría</h4>
+        <div style="height: 250px; position: relative;">
+          <canvas id="chartProyectos"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
   <div class="stats-panel" *ngIf="statsData">
     <div class="card-stat spring-card">
       <h3>⚡ Backend Secundario</h3>

@@ -21,6 +21,22 @@
   </header>
 
   <div class="content-wrapper">
+
+    <section class="client-dashboard" *ngIf="currentUser" style="margin-bottom: 40px;">
+      <div class="card shadow-sm" style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto;">
+        <h3 style="color: #2575fc; margin-bottom: 20px; text-align: center;">
+          📊 Estado de Mis Solicitudes
+        </h3>
+
+        <div *ngIf="misSolicitudes.length === 0" style="text-align: center; color: #666; padding: 20px;">
+          <p>Aún no has realizado ninguna solicitud de asesoría.</p>
+        </div>
+
+        <div [style.display]="misSolicitudes.length > 0 ? 'flex' : 'none'" style="height: 300px; justify-content: center;">
+          <canvas id="clienteChart"></canvas>
+        </div>
+      </div>
+    </section>
     <section class="programmers-section">
       <h2 class="section-title">Nuestros Expertos Disponibles</h2>
 

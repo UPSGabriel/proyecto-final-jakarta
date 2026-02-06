@@ -5,9 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c5f7dbf-f1c0-4fae-b714-5bc93acbe11f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/.settings/org.eclipse.m2e.core.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/.settings/org.eclipse.wst.common.component" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/.settings/org.eclipse.wst.common.project.facet.core.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/.settings/org.eclipse.wst.validation.prefs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/HELP.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/target/classes/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/target/classes/META-INF/maven/ec.edu.ups/reportes-api/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/target/classes/META-INF/maven/ec.edu.ups/reportes-api/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api (1)/reportes-api/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/auth/login.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/auth/login.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ec/edu/ups/proyectoFinal/services/AuthRest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ec/edu/ups/proyectoFinal/services/AuthRest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/public/public.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/public/public.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/public/public.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/public/public.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/roles/admin/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/roles/admin/admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/roles/admin/admin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/roles/admin/admin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/roles/programmer/programmer.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/roles/programmer/programmer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/app/roles/programmer/programmer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/roles/programmer/programmer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ec/edu/ups/proyectoFinal/services/UsuariosRest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ec/edu/ups/proyectoFinal/services/UsuariosRest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +95,7 @@
       <workItem from="1770254702550" duration="14796000" />
       <workItem from="1770296590222" duration="18120000" />
       <workItem from="1770325837629" duration="18000" />
-      <workItem from="1770347660636" duration="2234000" />
+      <workItem from="1770347660636" duration="8503000" />
     </task>
     <servers />
   </component>
