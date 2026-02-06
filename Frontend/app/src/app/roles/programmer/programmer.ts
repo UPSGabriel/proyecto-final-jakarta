@@ -22,8 +22,8 @@ export class ProgrammerComponent implements OnInit {
   private router = inject(Router);   // 👈 Nuevo
 
 
-  private readonly JAVA_API = 'http://localhost:8080/proyectoFinal/api/asesorias';
-  private readonly PYTHON_API = 'http://localhost:8000/notificaciones/enviar';
+  private readonly JAVA_API = 'https://backend-proyecto-final-ajik.onrender.com/asesorias';
+  private readonly PYTHON_API = 'https://backend-python-upxt.onrender.com/notificaciones/enviar';
 
 
   projects: Proyecto[] = [];

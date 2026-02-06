@@ -9,7 +9,7 @@ export class SpringBootService {
   private http = inject(HttpClient);
   
 
-  private readonly SPRING_API = 'http://localhost:8081/api/stats';
+  private readonly SPRING_API = 'https://deploy-springboot-mdjr.onrender.com/api/stats';
 
   getEstadisticas(): Observable<any> {
     return this.http.get(`${this.SPRING_API}/resumen`);

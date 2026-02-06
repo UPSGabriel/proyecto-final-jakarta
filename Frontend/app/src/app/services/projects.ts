@@ -9,7 +9,7 @@ export class ProjectsService {
   private http = inject(HttpClient);
   
 
-  private readonly API_URL = 'http://localhost:8080/proyectoFinal/api/proyectos';
+  private readonly API_URL = 'https://backend-proyecto-final-ajik.onrender.com/proyectos';
 
 
   getAll(): Observable<Proyecto[]> {

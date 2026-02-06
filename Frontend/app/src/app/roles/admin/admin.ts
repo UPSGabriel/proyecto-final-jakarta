@@ -21,8 +21,8 @@ export class AdminComponent implements OnInit {
   private pythonService = inject(PythonService);
   private router = inject(Router);
 
-  private readonly JAKARTA_API = 'http://localhost:8080/proyectoFinal/api/usuarios';
-  private readonly PYTHON_API = 'http://localhost:8000/notificaciones/enviar';
+  private readonly JAKARTA_API = 'https://backend-proyecto-final-ajik.onrender.com/usuarios';
+  private readonly PYTHON_API = 'https://backend-python-upxt.onrender.com/notificaciones/enviar';
 
   users: Usuario[] = [];
   statsData: any = null;

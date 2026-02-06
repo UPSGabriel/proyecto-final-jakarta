@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class PythonService {
 
-  private pythonUrl = 'http://localhost:8000';
+  private pythonUrl = 'https://backend-python-upxt.onrender.com';
 
   constructor(private http: HttpClient) { }
 
