@@ -26,7 +26,7 @@ export class PublicComponent implements OnInit {
   private router = inject(Router);
 
   // URL del Backend para obtener citas
-  private readonly JAVA_API_ASESORIAS = 'http://localhost:8080/proyectoFinal/api/asesorias';
+  private readonly JAVA_API_ASESORIAS = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api';
 
   programadores: Usuario[] = [];
   currentUser: Usuario | null = null;

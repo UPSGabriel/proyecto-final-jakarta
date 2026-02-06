@@ -29,8 +29,8 @@ export class AdminComponent implements OnInit {
   private readonly PYTHON_API = 'https://backend-python-upxt.onrender.com/notificaciones/enviar';
 
   // Endpoints para los gráficos
-  private readonly API_ASESORIAS = 'http://localhost:8080/proyectoFinal/api/asesorias/todas'; // Ajustar si es necesario
-  private readonly API_PROYECTOS = 'http://localhost:8080/proyectoFinal/api/proyectos';
+  private readonly API_ASESORIAS = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api'; // Ajustar si es necesario
+  private readonly API_PROYECTOS = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api';
 
   users: Usuario[] = [];
   statsData: any = null;
@@ -61,7 +61,7 @@ export class AdminComponent implements OnInit {
     // 1. Obtener Asesorías para el Gráfico de Barras
     // Nota: Usamos el endpoint que devuelve TODAS las asesorías
     // Si no tienes uno específico "todas", usa el genérico.
-    this.http.get<any[]>('http://localhost:8080/proyectoFinal/api/asesorias').subscribe({
+    this.http.get<any[]>('https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api').subscribe({
       next: (asesorias) => {
         this.generarGraficoProgramadores(asesorias);
       },

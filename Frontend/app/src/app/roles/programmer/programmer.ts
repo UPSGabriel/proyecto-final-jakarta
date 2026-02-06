@@ -26,9 +26,9 @@ export class ProgrammerComponent implements OnInit {
   private router = inject(Router);
 
   // URLs (Asegúrate de que el puerto sea el correcto, a veces es 8080)
-  private readonly JAVA_API = 'http://localhost:8080/proyectoFinal/api/asesorias';
+  private readonly JAVA_API = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api';
   private readonly PYTHON_API = 'http://localhost:8000/notificaciones/enviar';
-  private readonly JAVA_USUARIOS = 'http://localhost:8080/proyectoFinal/api/usuarios';
+  private readonly JAVA_USUARIOS = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api';
 
   projects: Proyecto[] = [];
   asesorias: Asesoria[] = [];
