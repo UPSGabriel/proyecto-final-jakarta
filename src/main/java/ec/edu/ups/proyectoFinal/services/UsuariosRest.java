@@ -1,7 +1,6 @@
 package ec.edu.ups.proyectoFinal.services;
 
 import ec.edu.ups.proyectoFinal.dao.UsuarioDAO;
-import ec.edu.ups.proyectoFinal.model.LoginResponse;
 import ec.edu.ups.proyectoFinal.model.Usuario;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -9,11 +8,14 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import java.util.Date;
 import java.util.List;
 
-@Path("usuarios") 
+@Path("usuarios")
+@Tag(name = "Gestión de Usuarios", description = "Operaciones CRUD y Autenticación")
 public class UsuariosRest {
 
     @Inject
@@ -22,14 +24,13 @@ public class UsuariosRest {
     @Inject
     private NotificationService notificaciones;
     
-
     public void registrarUsuario(Usuario u) {
-        
         notificaciones.enviarWhatsapp("+593987654321", "¡Hola " + u.getNombre() + "! Bienvenido a Dúo Trend 🚀");
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Listar todos los usuarios", description = "Devuelve la lista completa de administradores, programadores y clientes.")
     public Response getUsuarios() {
         try {
             List<Usuario> usuarios = dao.getAll();
@@ -39,14 +40,13 @@ public class UsuariosRest {
         }
     }
 
-  
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Crear nuevo usuario", description = "Registra un usuario y envía notificación de bienvenida si es Cliente.")
     public Response createUsuario(Usuario u) {
         try {
             dao.insert(u);
-            
             
             if (u.getRol().equalsIgnoreCase("CLIENTE")) {
                 registrarUsuario(u); 
@@ -58,10 +58,10 @@ public class UsuariosRest {
         }
     }
 
-   
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Actualizar usuario", description = "Modifica datos del perfil o credenciales.")
     public Response updateUsuario(Usuario u) {
         try {
             dao.update(u);
@@ -70,10 +70,10 @@ public class UsuariosRest {
             return Response.status(500).entity("Error al actualizar").build();
         }
     }
-
     
     @DELETE
     @Path("/{id}")
+    @Operation(summary = "Eliminar usuario", description = "Borra un usuario permanentemente por su ID.")
     public Response deleteUsuario(@PathParam("id") int id) {
         try {
             dao.delete(id);
@@ -83,13 +83,12 @@ public class UsuariosRest {
         }
     }
     
-    
     @GET
     @Path("programadores")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obtener Programadores (Público)", description = "Filtra solo los usuarios con rol PROGRAMADOR para mostrar en el portafolio público.")
     public Response getProgramadores() {
         try {
-           
             List<Usuario> usuarios = dao.getAll(); 
             List<Usuario> programadores = usuarios.stream()
                 .filter(u -> "PROGRAMADOR".equalsIgnoreCase(u.getRol()))
@@ -104,15 +103,14 @@ public class UsuariosRest {
     @Path("login") 
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Iniciar Sesión", description = "Verifica credenciales y retorna un Token JWT junto con los datos del usuario.")
     public Response login(Usuario u) {
         Usuario user = dao.login(u.getEmail(), u.getPassword());
         
         if(user != null) {
-            
             String token = Jwts.builder().setSubject(user.getEmail()).claim("rol", user.getRol())
                 .setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256)).compact();
-            
             
             String jsonRespuesta = "{"
                 + "\"token\":\"" + token + "\","
