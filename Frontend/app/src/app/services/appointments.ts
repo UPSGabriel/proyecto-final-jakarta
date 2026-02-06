@@ -10,7 +10,7 @@ export class AppointmentsService {
   private http = inject(HttpClient);
   
 
-  private readonly API_URL = 'https://backend-proyecto-final-ajik.onrender.com/asesorias';
+  private readonly API_URL = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api/asesorias';
 
 
   getAll(): Observable<Asesoria[]> {

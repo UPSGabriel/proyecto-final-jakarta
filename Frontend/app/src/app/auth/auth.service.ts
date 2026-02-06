@@ -12,7 +12,7 @@ export class AuthService {
   platformId = inject(PLATFORM_ID);
 
 
-  private readonly BASE_URL = 'https://backend-proyecto-final-ajik.onrender.com';
+  private readonly BASE_URL = 'https://backend-proyecto-final-ajik.onrender.com/proyectoFinal/api';
 
   currentUser$ = new BehaviorSubject<any>(null);
 
