@@ -1,0 +1,21 @@
+# 1. Conectarse al modo embebido
+embed-server --std-out=echo
+
+# 2. Agregar el driver de PostgreSQL (Render lo descargará)
+module add --name=org.postgresql --resources=/opt/jboss/wildfly/standalone/deployments/postgresql-42.7.2.jar --dependencies=javax.api,javax.transaction.api
+
+
+data-source add \
+ --jndi-name=java:jboss/datasources/ProyectoFinalDS \
+ --name=ProyectoFinalDS \
+ --connection-url=jdbc:postgresql://mainline.proxy.rlwy.net:57516/railway \
+ --driver-name=org.postgresql \
+ --user-name=postgres \
+ --password=hBInKYStGCFGDNVfYkdKJojqwSEEwbJX \
+ --check-valid-connection-sql="SELECT 1" \
+ --background-validation=true \
+ --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker \
+ --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter
+
+# 4. Detener el servidor embebido
+stop-embedded-server
