@@ -27,11 +27,11 @@ public class AuthRest {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(Usuario credenciales) {
-        // Usamos tu DAO que ya funciona
+        
         Usuario u = dao.login(credenciales.getEmail(), credenciales.getPassword());
         
         if (u != null) {
-            // 🚀 USAMOS EL DTO AQUÍ PARA ENVIAR TODO
+            
             LoginResponse res = new LoginResponse(
                 u.getId(), 
                 u.getNombre(), 
