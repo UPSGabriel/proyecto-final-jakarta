@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c5f7dbf-f1c0-4fae-b714-5bc93acbe11f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/auth/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/auth/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/roles/admin/admin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/roles/admin/admin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/roles/programmer/programmer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/roles/programmer/programmer.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/services/appointments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/services/appointments.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/services/projects.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/services/projects.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/services/public.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/services/public.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/services/python.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/services/python.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/app/services/springboot.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/app/services/springboot.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../modulo-python/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../modulo-python/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../modulo-spring/reportes-api/reportes-api/src/main/java/ec/edu/ups/reportes/api/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../modulo-spring/reportes-api/reportes-api/src/main/java/ec/edu/ups/reportes/api/CorsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../setup.cli" beforeDir="false" afterPath="$PROJECT_DIR$/../setup.cli" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/webapp/swagger.html" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/webapp/swagger.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,27 +35,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "Merging main",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/Users/Gabriel/eclipse-workspace/proyectoFinal/Frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\Gabriel\\eclipse-workspace\\proyectoFinal\\Frontend\\app\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gabriel/eclipse-workspace/proyectoFinal/Frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Gabriel\\eclipse-workspace\\proyectoFinal\\Frontend\\app\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -87,7 +75,8 @@
       <workItem from="1770254702550" duration="14796000" />
       <workItem from="1770296590222" duration="18120000" />
       <workItem from="1770325837629" duration="18000" />
-      <workItem from="1770347660636" duration="9188000" />
+      <workItem from="1770347660636" duration="9510000" />
+      <workItem from="1770380317163" duration="970000" />
     </task>
     <servers />
   </component>
