@@ -13,10 +13,7 @@ import jakarta.ws.rs.ext.Provider;
 @PreMatching // <--- ESTA ETIQUETA ES LA CLAVE
 public class CORSFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
-    /**
-     * FILTRO DE ENTRADA (Request):
-     * Detecta si el navegador está preguntando permisos (OPTIONS) y responde "OK" de inmediato.
-     */
+ 
     @Override
     public void filter(ContainerRequestContext request) throws IOException {
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
@@ -24,10 +21,7 @@ public class CORSFilter implements ContainerRequestFilter, ContainerResponseFilt
         }
     }
 
-    /**
-     * FILTRO DE SALIDA (Response):
-     * Pone los sellos de permiso en todas las respuestas que salen del servidor.
-     */
+   
     @Override
     public void filter(ContainerRequestContext request, ContainerResponseContext response) throws IOException {
         response.getHeaders().add("Access-Control-Allow-Origin", "*");
